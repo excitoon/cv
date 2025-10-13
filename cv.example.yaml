@@ -1,0 +1,390 @@
+configurations:
+  sample:
+    basename: sample
+    template: moderncv.pdflatex.tex.j2
+    dockerfile: backend/pdflatex.dockerfile
+    backend: pdflatex
+    environment:
+      color: green
+
+data:
+  person:
+    name:
+      en: Alex Falcon
+      ru: Алекс Фалкон
+    title:
+      en: Systems Generalist
+      ru: Системный специалист
+    location:
+      en: Helios City, Solaris
+      ru: Гелиос-сити, Солярис
+    contacts:
+      email: alex.falcon@example.com
+      phone: "+1 555 000 1122"
+      github: https://github.com/afalcon
+      linkedin: https://linkedin.com/in/afalcon
+    summary:
+      en: Curious generalist building reliable systems with a taste for weird constraints.
+      ru: Любопытный специалист, создающий надёжные системы и любящий нестандартные задачи.
+
+  highlights:
+  - en: Reduced cold-start latency for services by 47% using a staged prewarming pipeline.
+    ru: Снизил задержку холодного старта сервисов на 47% с помощью поэтапного разогрева.
+  - en: Consolidated 60+ jobs into a single DAG with clear SLAs and backpressure.
+    ru: Объединил 60+ заданий в единый DAG с понятными SLA и контролем нагрузки.
+
+  employers:
+    acme:
+      name:
+        en: Acme Orbits
+        ru: Acme Orbits
+      location:
+        en: Cloudport, Terra
+        ru: Клаудпорт, Терра
+      url: https://acmeorbits.example.com
+      roles:
+      - title:
+          en: Platform Engineer
+          ru: Инженер платформы
+    nebula:
+      name:
+        en: Nebula Foundry
+        ru: Nebula Foundry
+      location:
+        en: New Arcadia
+        ru: Нео-Аркадия
+      url: https://nebula.example.com
+      roles:
+      - title:
+          en: Software Engineer
+          ru: Инженер-программист
+    quark:
+      name:
+        en: Quark Trails
+        ru: Quark Trails
+      roles:
+      - title:
+          en: Developer
+          ru: Разработчик
+    starforge:
+      name:
+        en: Starforge Collective
+        ru: Starforge Collective
+      roles:
+      - title:
+          en: SRE
+          ru: SRE
+    openatlas:
+      name:
+        en: OpenAtlas
+        ru: OpenAtlas
+      type: volunteer
+      roles:
+      - title:
+          en: Contributor
+          ru: Участник
+
+  projects:
+    pulse:
+      name:
+        en: Event Pulse
+        ru: Event Pulse
+      employer: acme
+      type: employment
+      start: "2023-02"
+      end: "2024-11"
+      summary:
+        en: High-rate event ingestion with adaptive batching and idempotent sinks.
+        ru: Высокоскоростной приём событий с адаптивной пакетизацией и идемпотентными приёмниками.
+      responsibilities:
+      - en: Implemented backpressure-aware gRPC producers.
+        ru: Реализовал gRPC-продюсеры с учётом обратного давления.
+      - en: Tuned Postgres partitioning for 2B rows/month.
+        ru: Настроил партиционирование Postgres для 2 млрд строк/месяц.
+      skills: [rust, postgres, grpc, prom]
+      links:
+        repo: https://git.example.com/acme/pulse
+        docs: https://docs.example.com/pulse
+      contributions: [prom]
+
+    orbitctl:
+      name:
+        en: orbitctl
+        ru: orbitctl
+      employer: acme
+      type: employment
+      start: "2022-08"
+      end: "2023-01"
+      summary:
+        en: Unified CLI to bootstrap environments and rotate secrets.
+        ru: Единый CLI для развёртывания окружений и ротации секретов.
+      responsibilities:
+      - en: Added hermetic builds via Nix flakes.
+        ru: Добавил герметичные сборки с помощью Nix flakes.
+      skills: [nix, tf, k8s]
+      links: {}
+      contributions: []
+
+    nebula-graph:
+      name:
+        en: Nebula Graph Sync
+        ru: Nebula Graph Sync
+      employer: nebula
+      type: employment
+      start: "2021-01"
+      end: "2022-07"
+      summary:
+        en: Incremental sync engine for heterogeneous data sources.
+        ru: Инкрементальный движок синхронизации для разнородных источников.
+      responsibilities:
+      - en: Designed a resumable protocol with at-least-once semantics.
+        ru: Спроектировал возобновляемый протокол с семантикой at-least-once.
+      skills: [kotlin, postgres, redis, grpc]
+      links: {}
+      contributions: []
+
+    openatlas-maps:
+      name:
+        en: OpenAtlas Maps
+        ru: OpenAtlas Maps
+      employer: openatlas
+      type: volunteer
+      start: "2019-03"
+      end: "2020-09"
+      summary:
+        en: Community tooling for map tiling and preview.
+        ru: Сообщественный туллинг для тайлинга карт и предпросмотра.
+      responsibilities:
+      - en: Built tile cache and prerender queue.
+        ru: Реализовал кэш тайлов и очередь пререндеринга.
+      skills: [ts, redis, k8s]
+      links: {}
+      contributions: []
+
+  contributions:
+    prom:
+      repo: prom-community/awesome-exporters
+      link: https://github.com/prom-community/awesome-exporters/pull/4242
+      note:
+        en: Added exporter config examples
+        ru: Добавлены примеры конфигурации экспортера
+    flake:
+      repo: nixos/nixpkgs
+      link: https://github.com/NixOS/nixpkgs/pull/223344
+      note:
+        en: Derivation improvements
+        ru: Улучшения дериваций
+    jet:
+      repo: octocat/jet
+      link: https://github.com/octocat/jet/pull/77
+      note:
+        en: Performance tweaks
+        ru: Оптимизации производительности
+
+  education:
+    uni_sol:
+      institution: University of Solaris
+      degree:
+        en: MSc
+        ru: Магистр
+      field:
+        en: Distributed Systems
+        ru: Распределённые системы
+      start: 2016
+      end: 2018
+      location:
+        en: Aurora, Solaris
+        ru: Аврора, Солярис
+    poly_terra:
+      institution: Terra Polytechnic
+      degree:
+        en: BSc
+        ru: Бакалавр
+      field:
+        en: Computer Engineering
+        ru: Компьютерная инженерия
+      start: 2012
+      end: 2016
+      location:
+        en: Terra Prime
+        ru: Терра Прайм
+
+  classes:
+  - name:
+      en: Streaming Systems
+      ru: Потоковые системы
+    provider:
+      en: OpenLearn
+      ru: OpenLearn
+    year: 2021
+    link: https://learn.example.com/streaming
+  - name:
+      en: Reliable Infrastructure
+      ru: Надёжная инфраструктура
+    provider:
+      en: In-house
+      ru: Внутренний
+    year: 2023
+    link: https://intra.example.com/reliability
+
+  languages:
+    english:
+      name:
+        en: English
+        ru: Английский
+      level: C1
+    russian:
+      name:
+        en: Russian
+        ru: Русский
+      level: B2
+    german:
+      name:
+        en: German
+        ru: Немецкий
+      level: B1
+    spanish:
+      name:
+        en: Spanish
+        ru: Испанский
+      level: A2
+    japanese:
+      name:
+        en: Japanese
+        ru: Японский
+      level: A1
+
+  skills:
+    registry:
+      rust:
+        name:
+          en: Rust
+          ru: Rust
+        level: advanced
+      kotlin:
+        name:
+          en: Kotlin
+          ru: Kotlin
+        level: advanced
+      ts:
+        name:
+          en: TypeScript
+          ru: TypeScript
+        level: intermediate
+      postgres:
+        name:
+          en: PostgreSQL
+          ru: PostgreSQL
+        level: advanced
+      redis:
+        name:
+          en: Redis
+          ru: Redis
+        level: advanced
+      k8s:
+        name:
+          en: Kubernetes
+          ru: Kubernetes
+        level: advanced
+      tf:
+        name:
+          en: Terraform
+          ru: Terraform
+        level: intermediate
+      nix:
+        name:
+          en: Nix
+          ru: Nix
+        level: intermediate
+      prom:
+        name:
+          en: Prometheus
+          ru: Prometheus
+        level: advanced
+      grpc:
+        name:
+          en: gRPC
+          ru: gRPC
+        level: advanced
+
+    groups:
+    - id: languages
+      name:
+        en: Programming languages
+        ru: Языки программирования
+      items: [rust, kotlin, ts]
+    - id: data
+      name:
+        en: Data/Storage
+        ru: Данные/Хранилища
+      items: [postgres, redis]
+    - id: platform
+      name:
+        en: Platform/Infra
+        ru: Платформа/Инфраструктура
+      items: [k8s, tf, nix, prom, grpc]
+
+  recommendations:
+  - name:
+      en: Dana Ortiz
+      ru: Дана Ортис
+    title:
+      en: Staff Engineer
+      ru: Ведущий инженер
+    relation:
+      en: Mentor at Acme Orbits
+      ru: Наставник в Acme Orbits
+    text:
+      en: Consistently delivered under pressure and raised the bar for reliability.
+      ru: Стабильно выполнял задачи под давлением и повышал планку надёжности.
+    contact:
+      email: dana.ortiz@example.com
+      linkedin: https://linkedin.com/in/dana-ortiz
+  - name:
+      en: Ilya Serebrov
+      ru: Илья Серебров
+    title:
+      en: SRE Manager
+      ru: Руководитель SRE
+    relation:
+      en: Manager at Nebula Foundry
+      ru: Руководитель в Nebula Foundry
+    text:
+      en: Pragmatic engineer with strong ownership and great collaboration skills.
+      ru: Прагматичный инженер с высокой ответственностью и отличным взаимодействием.
+    contact:
+      email: ilya.serebrov@example.com
+
+  awards:
+  - en: Solar Hack 2022 winner
+    ru: Победитель хакатона Solar Hack 2022
+  - en: Infra Excellence 2023 laureate
+    ru: Лауреат конкурса Infra Excellence 2023
+
+  certifications:
+  - en: CKAD (Kubernetes Application Developer)
+    ru: CKAD (Сертифицированный разработчик приложений Kubernetes)
+  - en: HashiCorp Terraform Associate
+    ru: Ассоциированный специалист HashiCorp Terraform
+
+  publications:
+  - en: Idempotent event pipelines at scale — TechConf 2024
+    ru: Идемпотентные конвейеры событий на масштабе — TechConf 2024
+  - en: Debugging backpressure in production — DevOps Weekly #312
+    ru: Отладка обратного давления в продакшене — DevOps Weekly #312
+
+  talks:
+  - en: "Backpressure in gRPC: practical techniques"
+    ru: "Обратное давление в gRPC: практические приёмы"
+  - en: Nix for reproducible builds in a multi-repo
+    ru: Nix для воспроизводимых сборок в мульти-репозитории
+
+  interests:
+  - en: Retrocomputing
+    ru: Ретрокомпьютинг
+  - en: Bouldering
+    ru: Боулдеринг
+  - en: Generative music
+    ru: Генеративная музыка
+  - en: Variable typography
+    ru: Вариативная типография

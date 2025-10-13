@@ -1,0 +1,87 @@
+summary:
+  en: Summary
+  ru: О себе
+highlights:
+  en: Highlights
+  ru: Ключевые достижения
+skills:
+  en: Skills
+  ru: Навыки
+experience:
+  en: Experience
+  ru: Опыт
+education:
+  en: Education
+  ru: Образование
+classes:
+  en: Courses
+  ru: Курсы
+recommendations:
+  en: Recommendations
+  ru: Рекомендации
+languages:
+  en: Languages
+  ru: Языки
+awards:
+  en: Awards
+  ru: Награды
+certifications:
+  en: Certifications
+  ru: Сертификации
+publications:
+  en: Publications
+  ru: Публикации
+talks:
+  en: Talks
+  ru: Доклады
+interests:
+  en: Interests
+  ru: Интересы
+present:
+  en: present
+  ru: по н.в.
+skills_caption:
+  en: Skills
+  ru: Навыки
+months_abbr:
+  en: mo
+  ru: мес
+years_abbr:
+  en: yrs
+  ru: лет
+responsibilities:
+  en: Responsibilities
+  ru: Обязанности
+impact:
+  en: Impact
+  ru: Влияние
+links:
+  en: Links
+  ru: Ссылки
+contributions:
+  en: Contributions
+  ru: Вклад
+contact:
+  en: Contact
+  ru: Контакты
+generated:
+  en: Generated
+  ru: Сгенерировано
+experience_caption:
+  en: Experience
+  ru: Опыт
+companies:
+  en: Companies
+  ru: Компаний
+projects:
+  en: Projects
+  ru: Проектов
+github:
+  en: GitHub
+  ru: GitHub
+linkedin:
+  en: LinkedIn
+  ru: LinkedIn
+telegram:
+  en: Telegram
+  ru: Телеграм

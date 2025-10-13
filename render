@@ -1,0 +1,66 @@
+#!/usr/bin/env python3
+
+import importlib
+import os
+import sys
+
+import click
+import yaml
+
+import backend
+
+
+def load_yaml(path: str) -> dict:
+    with open(path, 'r', encoding='utf-8') as f:
+        return yaml.safe_load(f) or {}
+
+
+@click.command(help='Render CV template')
+@click.option('--configuration', '-c', default='sample', show_default=True, help='Configuration name')
+@click.option('--yaml', '-y', 'yaml_path', default='~/cv.yaml', show_default=True, help='Input data file')
+@click.option('--language', '-l', default='en', show_default=True, help='Output language')
+@click.option('--out', '-o', 'out_dir', default='build/', show_default=True, help='Output directory')
+def main(configuration: str, yaml_path: str, language: str, out_dir: str):
+    os.makedirs(out_dir, exist_ok=True)
+
+    data = load_yaml(os.path.expanduser(yaml_path))
+    configs = data['configurations']
+    labels = load_yaml('label.yaml')
+
+    if configuration not in configs:
+        available = ', '.join(sorted(configs.keys()))
+        raise click.UsageError(f'Configuration `{configuration}` not found. Available: {available}.')
+
+    build_settings = configs[configuration]
+
+    template = build_settings['template']
+    dockerfile = build_settings['dockerfile']
+    environment = build_settings['environment']
+    basename = build_settings['basename']
+
+    Renderer = getattr(importlib.import_module(f'backend.{build_settings['backend']}'), 'Renderer')
+    renderer: backend.BaseRenderer = Renderer(
+        data=data['data'],
+        labels=labels,
+        basename=basename,
+        language=language,
+        template=template,
+        dockerfile=dockerfile,
+        environment=environment,
+        out_dir=out_dir,
+    )
+
+    if configuration == 'sample' and data['data']['person']['name']['en'] == 'Alex Falcon':
+        i = renderer.expand_intermediate()
+        with open('intermediate.example.yaml', 'w', encoding='utf-8') as f:
+            yaml.safe_dump(i, f, allow_unicode=True, indent=2, sort_keys=False)
+
+    renderer.render()
+
+
+if __name__ == '__main__':
+    try:
+        main(standalone_mode=True)
+    except click.ClickException as e:
+        e.show()
+        sys.exit(2)

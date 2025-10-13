@@ -1,0 +1,316 @@
+version: 1
+generated_at: '2025-10-14'
+locale: ru_RU
+environment:
+  color: green
+person:
+  name: Алекс Фалкон
+  title: Системный специалист
+  location: Гелиос-сити, Солярис
+  contacts:
+    email: alex.falcon@example.com
+    phone: +1 555 000 1122
+    github: https://github.com/afalcon
+    linkedin: https://linkedin.com/in/afalcon
+  summary: Любопытный специалист, создающий надёжные системы и любящий нестандартные
+    задачи.
+highlights:
+- Снизил задержку холодного старта сервисов на 47% с помощью поэтапного разогрева.
+- Объединил 60+ заданий в единый DAG с понятными SLA и контролем нагрузки.
+skills:
+- id: languages
+  group: Языки программирования
+  items:
+  - id: rust
+    name: Rust
+    level: advanced
+    highlight: false
+  - id: kotlin
+    name: Kotlin
+    level: advanced
+    highlight: false
+  - id: ts
+    name: TypeScript
+    level: intermediate
+    highlight: false
+- id: data
+  group: Данные/Хранилища
+  items:
+  - id: postgres
+    name: PostgreSQL
+    level: advanced
+    highlight: false
+  - id: redis
+    name: Redis
+    level: advanced
+    highlight: false
+- id: platform
+  group: Платформа/Инфраструктура
+  items:
+  - id: k8s
+    name: Kubernetes
+    level: advanced
+    highlight: false
+  - id: tf
+    name: Terraform
+    level: intermediate
+    highlight: false
+  - id: nix
+    name: Nix
+    level: intermediate
+    highlight: false
+  - id: prom
+    name: Prometheus
+    level: advanced
+    highlight: false
+  - id: grpc
+    name: gRPC
+    level: advanced
+    highlight: false
+languages:
+- name: Английский
+  level: C1
+- name: Русский
+  level: B2
+- name: Немецкий
+  level: B1
+- name: Испанский
+  level: A2
+- name: Японский
+  level: A1
+experience:
+- employer: Acme Orbits
+  location: Клаудпорт, Терра
+  url: https://acmeorbits.example.com
+  role: Инженер платформы
+  start: 2022-08
+  end: 2024-11
+  duration_months: 27
+  keywords:
+  - Rust
+  - PostgreSQL
+  - gRPC
+  - Prometheus
+  - Nix
+  - Terraform
+  - Kubernetes
+  projects:
+  - name: Event Pulse
+    type: employment
+    start: 2023-02
+    end: 2024-11
+    duration_months: 21
+    summary: Высокоскоростной приём событий с адаптивной пакетизацией и идемпотентными
+      приёмниками.
+    responsibilities:
+    - Реализовал gRPC-продюсеры с учётом обратного давления.
+    - Настроил партиционирование Postgres для 2 млрд строк/месяц.
+    skills:
+    - id: rust
+      name: Rust
+      level: advanced
+      highlight: false
+    - id: postgres
+      name: PostgreSQL
+      level: advanced
+      highlight: false
+    - id: grpc
+      name: gRPC
+      level: advanced
+      highlight: false
+    - id: prom
+      name: Prometheus
+      level: advanced
+      highlight: false
+    links:
+      repo: https://git.example.com/acme/pulse
+      docs: https://docs.example.com/pulse
+    contributions:
+    - repo: prom-community/awesome-exporters
+      link: https://github.com/prom-community/awesome-exporters/pull/4242
+      note: Добавлены примеры конфигурации экспортера
+  - name: orbitctl
+    type: employment
+    start: 2022-08
+    end: 2023-01
+    duration_months: 5
+    summary: Единый CLI для развёртывания окружений и ротации секретов.
+    responsibilities:
+    - Добавил герметичные сборки с помощью Nix flakes.
+    skills:
+    - id: nix
+      name: Nix
+      level: intermediate
+      highlight: false
+    - id: tf
+      name: Terraform
+      level: intermediate
+      highlight: false
+    - id: k8s
+      name: Kubernetes
+      level: advanced
+      highlight: false
+    links: {}
+    contributions: []
+- employer: Nebula Foundry
+  location: Нео-Аркадия
+  url: https://nebula.example.com
+  role: Инженер-программист
+  start: 2021-01
+  end: 2022-07
+  duration_months: 18
+  keywords:
+  - Kotlin
+  - PostgreSQL
+  - Redis
+  - gRPC
+  projects:
+  - name: Nebula Graph Sync
+    type: employment
+    start: 2021-01
+    end: 2022-07
+    duration_months: 18
+    summary: Инкрементальный движок синхронизации для разнородных источников.
+    responsibilities:
+    - Спроектировал возобновляемый протокол с семантикой at-least-once.
+    skills:
+    - id: kotlin
+      name: Kotlin
+      level: advanced
+      highlight: false
+    - id: postgres
+      name: PostgreSQL
+      level: advanced
+      highlight: false
+    - id: redis
+      name: Redis
+      level: advanced
+      highlight: false
+    - id: grpc
+      name: gRPC
+      level: advanced
+      highlight: false
+    links: {}
+    contributions: []
+- employer: OpenAtlas
+  location: null
+  url: null
+  role: Участник
+  start: 2019-03
+  end: 2020-09
+  duration_months: 18
+  keywords:
+  - TypeScript
+  - Redis
+  - Kubernetes
+  projects:
+  - name: OpenAtlas Maps
+    type: volunteer
+    start: 2019-03
+    end: 2020-09
+    duration_months: 18
+    summary: Сообщественный туллинг для тайлинга карт и предпросмотра.
+    responsibilities:
+    - Реализовал кэш тайлов и очередь пререндеринга.
+    skills:
+    - id: ts
+      name: TypeScript
+      level: intermediate
+      highlight: false
+    - id: redis
+      name: Redis
+      level: advanced
+      highlight: false
+    - id: k8s
+      name: Kubernetes
+      level: advanced
+      highlight: false
+    links: {}
+    contributions: []
+education:
+- institution: University of Solaris
+  degree: Магистр
+  field: Распределённые системы
+  start: 2016
+  end: 2018
+  location: Аврора, Солярис
+- institution: Terra Polytechnic
+  degree: Бакалавр
+  field: Компьютерная инженерия
+  start: 2012
+  end: 2016
+  location: Терра Прайм
+classes:
+- name: Потоковые системы
+  provider: OpenLearn
+  year: 2021
+  link: https://learn.example.com/streaming
+- name: Надёжная инфраструктура
+  provider: Внутренний
+  year: 2023
+  link: https://intra.example.com/reliability
+recommendations:
+- name: Дана Ортис
+  title: Ведущий инженер
+  relation: Наставник в Acme Orbits
+  text: Стабильно выполнял задачи под давлением и повышал планку надёжности.
+  contact:
+    email: dana.ortiz@example.com
+    linkedin: https://linkedin.com/in/dana-ortiz
+- name: Илья Серебров
+  title: Руководитель SRE
+  relation: Руководитель в Nebula Foundry
+  text: Прагматичный инженер с высокой ответственностью и отличным взаимодействием.
+  contact:
+    email: ilya.serebrov@example.com
+awards:
+- Победитель хакатона Solar Hack 2022
+- Лауреат конкурса Infra Excellence 2023
+certifications:
+- CKAD (Сертифицированный разработчик приложений Kubernetes)
+- Ассоциированный специалист HashiCorp Terraform
+publications:
+- Идемпотентные конвейеры событий на масштабе — TechConf 2024
+- Отладка обратного давления в продакшене — DevOps Weekly
+talks:
+- 'Обратное давление в gRPC: практические приёмы'
+- Nix для воспроизводимых сборок в мульти-репозитории
+interests:
+- Ретрокомпьютинг
+- Боулдеринг
+- Генеративная музыка
+- Вариативная типография
+metrics:
+  experience_years: 6
+  companies: 3
+  projects: 4
+labels:
+  summary: О себе
+  highlights: Ключевые достижения
+  skills: Навыки
+  experience: Опыт
+  education: Образование
+  classes: Курсы
+  recommendations: Рекомендации
+  languages: Языки
+  awards: Награды
+  certifications: Сертификации
+  publications: Публикации
+  talks: Доклады
+  interests: Интересы
+  present: по н.в.
+  skills_caption: Навыки
+  months_abbr: мес
+  years_abbr: лет
+  responsibilities: Обязанности
+  impact: Влияние
+  links: Ссылки
+  contributions: Вклад
+  contact: Контакты
+  generated: Сгенерировано
+  experience_caption: Опыт
+  companies: Компаний
+  projects: Проектов
+  github: GitHub
+  linkedin: LinkedIn
+  telegram: Телеграм

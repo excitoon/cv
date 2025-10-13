@@ -1,0 +1,27 @@
+.dockerignore
+
+# VCS
+.git
+.gitignore
+
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls
+*.log
+*.out
+*.synctex.gz
+*.toc
+*.nav
+*.snm
+*.vrb
+*.bcf
+*.run.xml
+_minted*
+*.pdf
+
+# OS junk
+.DS_Store
+Thumbs.db
