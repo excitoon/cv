@@ -43,7 +43,7 @@
 \usepackage{changepage}
 
 \AtBeginDocument{
-  \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
+  \hypersetup{colorlinks=true, linkcolor={{- environment.linkcolor | default('black') -}}, urlcolor={{- environment.urlcolor | default('blue') -}}}
 }
 
 % Person data.
@@ -53,13 +53,21 @@
 {% set first = p.get('first') or (parts[:-1]|join(' ') if parts|length>1 else full) %}
 {% set last = p.get('last') or (parts[-1] if parts|length>1 else '') %}
 \name{ {{- first -}} }{ {{- last -}} }
-{% if p.title %}\title{ {\raggedright{ {{- p.title -}} } } }{% endif %}
-{% if p.location %}\address{ {{- p.location -}} }{}{}{% endif %}
+{% if p.title %}
+  \title{ \raggedright{ {{- p.title -}} } }
+{% endif %}
+{% if p.location %}
+  \address{ {{- p.location -}} }{}{}
+{% endif %}
 
 % Use moderncv contact macros (no custom \extrainfo links)
 {% if p.contacts %}
-  {% if p.contacts.email %}\email{ {{- p.contacts.email -}} }{% endif %}
-  {% if p.contacts.phone %}\phone{ {{- p.contacts.phone -}} }{% endif %}
+  {% if p.contacts.email %}
+    \email{ {{- p.contacts.email -}} }
+  {% endif %}
+  {% if p.contacts.phone %}
+    \phone{ {{- p.contacts.phone -}} }
+  {% endif %}
   {% if p.contacts.website %}
     {% set w = p.contacts.website %}
     {% set wl = w|replace('https://','')|replace('http://','')|replace('www.','') %}
@@ -87,228 +95,261 @@
 
 % Summary.
 {% if p.summary %}
-\section*{ {{- labels.summary | default('Summary') -}} }
-\cvitem{}{ {{- p.summary | tex_escape -}} }
+  \section*{ {{- labels.summary | default('Summary') -}} }
+  \cvitem{}{ {{- p.summary | tex_escape -}} }
 {% endif %}
 
 % Highlights.
 {% if highlights and highlights|length > 0 %}
-\section*{ {{- labels.highlights | default('Highlights') -}} }
-\begin{itemize}
-  {% for h in highlights %}
-  \item {{ h | tex_escape }}
-  {% endfor %}
-\end{itemize}
+  \section*{ {{- labels.highlights | default('Highlights') -}} }
+  \cvitem{}{
+    \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for h in highlights %}
+        \item {{ h | tex_escape }}
+      {% endfor %}
+    \end{itemize}
+  }
 {% endif %}
 
 % Skills.
 {% if skills and skills|length > 0 %}
-\section*{ {{- labels.skills | default('Skills') -}} }
-{% for group in skills %}
-  {% set items_list = (group["items"] or []) %}
-  {% if items_list|length > 0 %}
-  {% set raw_label = (group["group"] or (group.get("name") or "")) %}
-  {% set label_tex = raw_label | tex_escape %}
-  {% set label = label_tex | replace('/', '/\\allowbreak{}') %}
-  \cvitem{ \parbox[t]{\hintscolumnwidth}{\RaggedLeft {{ label -}} } }{
-    {% for s in items_list %}
-      {% if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{% else %}{{- s.name | tex_escape -}}{% endif %}
-        {% if s.level or (s.months and s.months > 0) %} (%
-          \textit{{- '{' -}}
-            {%- if s.level -%}
-              {{- (labels.get('skill_' ~ s.level) or s.level) -}}
-            {%- endif -%}
-            {% if s.level and (s.months and s.months > 0) -%}, {% endif %}
-            {% if s.months and s.months > 0 %}{{- s.months }} {{ labels.months_abbr | default('mo') -}}{% endif %}
-          {{- '' -}} }%
-        ){% endif %}
-      {%- if not loop.last %}, {% endif %}
-    {% endfor %}
-  }
-  {% endif %}
-{% endfor %}
+  \section*{ {{- labels.skills | default('Skills') -}} }
+  {% for group in skills %}
+    {% set items_list = (group["items"] or []) %}
+    {% if items_list|length > 0 %}
+      {% set raw_label = (group["group"] or (group.get("name") or "")) %}
+      {% set label_tex = raw_label | tex_escape %}
+      {% set label = label_tex | replace('/', '/\\allowbreak{}') %}
+      \cvitem{ \parbox[t]{\hintscolumnwidth}{\RaggedLeft {{ label -}} } }{
+        {% for s in items_list %}
+          {% if s.highlight %}
+            \textbf{ {{- s.name | tex_escape -}} }
+          {% else %}
+            {{ s.name | tex_escape }}
+          {% endif %}
+          {% if s.level or (s.months and s.months > 0) %}
+            \textit{(
+              {%- if s.level -%}
+                {{- (labels.get('skill_' ~ s.level) or s.level) -}}
+              {%- endif -%}
+              {% if s.level and (s.months and s.months > 0) -%}, {% endif %}
+              {% if s.months and s.months > 0 %}{{- s.months }} {{ labels.months_abbr | default('mo') -}}{% endif %}
+            {{- '' -}})}%
+          {% endif %}
+          {%- if not loop.last %}, {% endif %}
+        {% endfor %}
+      }
+    {% endif %}
+  {% endfor %}
 {% endif %}
 
 % Experience.
 {% if experience and experience|length > 0 %}
-\section*{ {{- labels.experience | default('Experience') -}} }
-{% for e in experience %}
-  {% set e_start = (e.start | fmt_ym(lang)) or '?' %}
-  {% set e_end = (e.end | fmt_ym(lang)) or (labels.present | default('present')) %}
-  {% set period = e_start ~ ' -- ' ~ e_end %}
-  {% if e.duration_months %}{% set period = period ~ ' (' ~ e.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}
-    \cventry{ {{- period -}} }{ {{- (e.role or '') | tex_escape -}} }{ {{- (e.employer or '') | tex_escape -}} }{ {{- (e.location or '') | tex_escape -}} }{}{
-      {% if e.keywords %}\footnotesize\emph{ {{- (e.keywords | map('tex_escape') | list) | join(', ') -}} }\normalsize\\[2pt]{% endif %}
-    }
-    \begin{adjustwidth}{\hintscolumnwidth+\separatorcolumnwidth}{0pt}
-    {% if e.projects and e.projects|length > 0 %}
-      \begin{itemize}[leftmargin=*, itemsep=-8pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
-      {% for pr in e.projects %}
-        \item \textbf{ {{- (pr.name | default('Project')) | tex_escape -}} }
-        {% if pr.type %}
-          (\textit{ {{- labels.get('project_type_' ~ pr.type) | default(pr.type) -}} })
-        {% endif %}%
-        {% set pr_s = (pr.start | fmt_ym(lang)) or '?' %}
-        {% set pr_e = (pr.end | fmt_ym(lang)) or (labels.present | default('present')) %}
-        {% set pr_period = pr_s ~ ' -- ' ~ pr_e %}
-        {% if pr.duration_months %}{% set pr_period = pr_period ~ ' (' ~ pr.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}%
-        — {\small {{ pr_period -}} }\\
-        {% if pr.summary %}{{ pr.summary | tex_escape }}\\{% endif %}
-        {% if pr.skills and pr.skills|length > 0 %}
-          {\small {{ labels.skills_caption | default('Skills') -}}:
-            {% for s in pr.skills %}
-              {% if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{% else %}{{ s.name | tex_escape }}{% endif %}
-              {% if not loop.last %}, {% endif %}
-            {% endfor %}
-          }\\
-        {% endif %}
-        {% if pr.responsibilities and pr.responsibilities|length > 0 %}
-          {{ labels.responsibilities | default('Responsibilities') -}}:
-          \begin{itemize}
-            {% for r in pr.responsibilities %}
-            \item {{ r | tex_escape }}
-            {% endfor %}
-          \end{itemize}
-        {% endif %}
-        {% if pr.impact and pr.impact|length > 0 %}
-          {{ labels.impact | default('Impact') -}}:
-          \begin{itemize}
-            {% for im in pr.impact %}
-            \item {{ im | tex_escape }}
-            {% endfor %}
-          \end{itemize}
-        {% endif %}
-        {% if pr.links %}
-          {\small {{ labels.links | default('Links') -}}:
-            {% for k, v in pr.links.items() %}
-              \href{ {{- v -}} }{ {{- k -}} }{% if not loop.last %}, {% endif %}
-            {% endfor %}
-          }\\
-        {% endif %}
-        {% if pr.contributions and pr.contributions|length > 0 %}
-          {\small {{ labels.contributions | default('Contributions') -}}:
-            {% for c in pr.contributions %}
-              {% if c.link %}
-                \href{ {{- c.link -}} }{ {{- c.repo or 'repo' -}} }
-              {% else %}
-                {{ c.repo or 'repo' }}
-              {% endif %}
-              {% if c.note %} — {{ c.note }}{% endif %}
-              {% if not loop.last %}; {% endif %}
-            {% endfor %}
-          }\\
-        {% endif %}
-      {% endfor %}
-    \end{itemize}
+  \section*{ {{- labels.experience | default('Experience') -}} }
+  {% for e in experience %}
+    {% set e_start = (e.start | fmt_ym(lang)) or '?' %}
+    {% set e_end = (e.end | fmt_ym(lang)) or (labels.present | default('present')) %}
+    {% set period = e_start ~ ' -- ' ~ e_end %}
+    {% if e.duration_months %}{% set period = period ~ ' (' ~ e.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}
+      \cventry{ {{- period -}} }{ {{- (e.role or '') | tex_escape -}} }{ {{- (e.employer or '') | tex_escape -}} }{ {{- (e.location or '') | tex_escape -}} }{}{
+        {% if e.keywords %}\footnotesize\emph{ {{- (e.keywords | map('tex_escape') | list) | join(', ') -}} }\normalsize\\[2pt]{% endif %}
+      }
+      \begin{adjustwidth}{\hintscolumnwidth+\separatorcolumnwidth}{0pt}
+        {% if e.projects and e.projects|length > 0 %}
+          \begin{itemize}[leftmargin=*, itemsep=-8pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+          {% for pr in e.projects %}
+            \item \textbf{ {{- (pr.name | default('Project')) | tex_escape -}} }
+            {% if pr.type %}
+              (\textit{ {{- labels.get('project_type_' ~ pr.type) | default(pr.type) -}} })
+            {% endif %}%
+            {% set pr_s = (pr.start | fmt_ym(lang)) or '?' %}
+            {% set pr_e = (pr.end | fmt_ym(lang)) or (labels.present | default('present')) %}
+            {% set pr_period = pr_s ~ ' -- ' ~ pr_e %}
+            {% if pr.duration_months %}{% set pr_period = pr_period ~ ' (' ~ pr.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}%
+            — {\small {{ pr_period -}} }\\
+            {% if pr.summary %}{{ pr.summary | tex_escape }}\\{% endif %}
+            {% if pr.skills and pr.skills|length > 0 %}
+              {\small {{ labels.skills_caption | default('Skills') -}}:
+                {% for s in pr.skills %}
+                  {% if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{% else %}{{ s.name | tex_escape }}{% endif %}
+                  {% if not loop.last %}, {% endif %}
+                {% endfor %}
+              }\\
+            {% endif %}
+            {% if pr.responsibilities and pr.responsibilities|length > 0 %}
+              {{ labels.responsibilities | default('Responsibilities') -}}:
+              \begin{itemize}
+                {% for r in pr.responsibilities %}
+                \item {{ r | tex_escape }}
+                {% endfor %}
+              \end{itemize}
+            {% endif %}
+            {% if pr.impact and pr.impact|length > 0 %}
+              {{ labels.impact | default('Impact') -}}:
+              \begin{itemize}
+                {% for im in pr.impact %}
+                \item {{ im | tex_escape }}
+                {% endfor %}
+              \end{itemize}
+            {% endif %}
+            {% if pr.links %}
+              {\small {{ labels.links | default('Links') -}}:
+                {% for k, v in pr.links.items() %}
+                  \href{ {{- v -}} }{ {{- k -}} }{% if not loop.last %}, {% endif %}
+                {% endfor %}
+              }\\
+            {% endif %}
+            {% if pr.contributions and pr.contributions|length > 0 %}
+              {\small {{ labels.contributions | default('Contributions') -}}:
+                {% for c in pr.contributions %}
+                  {% if c.link %}
+                    \href{ {{- c.link -}} }{ {{- c.repo or 'repo' -}} }
+                  {% else %}
+                    {{ c.repo or 'repo' }}
+                  {% endif %}
+                  {% if c.note %} — {{ c.note }}{% endif %}
+                  {% if not loop.last %}; {% endif %}
+                {% endfor %}
+              }\\
+            {% endif %}
+          {% endfor %}
+        \end{itemize}
+      {% endif %}
     \end{adjustwidth}
-  {% endif %}
-{% endfor %}
+  {% endfor %}
 {% endif %}
 
 % Education.
 {% if education and education|length > 0 %}
-\section*{ {{- labels.education | default('Education') -}} }
-{% for ed in education %}
-  {% set ys = (ed.start | fmt_ym(lang)) if ed.start else '' %}
-  {% set ye = (ed.end | fmt_ym(lang)) if ed.end else '' %}
-  {% set years = (ys ~ ' -- ' ~ ye) if ys or ye else '' %}
-  \cventry{ {{- years -}} }{ {{- (ed.degree | default('') | tex_escape) -}} }{ {{- (ed.institution | default('') | tex_escape) -}} }{ {{- (ed.location | default('') | tex_escape) -}} }{}{
-    {% if ed.field %}{{ ed.field | tex_escape }}{% endif %}
-  }
-{% endfor %}
+  \section*{ {{- labels.education | default('Education') -}} }
+  {% for ed in education %}
+    {% set ys = (ed.start | fmt_ym(lang)) if ed.start else '' %}
+    {% set ye = (ed.end | fmt_ym(lang)) if ed.end else '' %}
+    {% set years = (ys ~ ' -- ' ~ ye) if ys or ye else '' %}
+    \cventry{ {{- years -}} }{ {{- (ed.degree | default('') | tex_escape) -}} }{ {{- (ed.institution | default('') | tex_escape) -}} }{ {{- (ed.location | default('') | tex_escape) -}} }{}{
+      {%- if ed.field -%}
+        {{- ed.field | tex_escape -}}
+      {%- endif -%}
+    }
+  {% endfor %}
 {% endif %}
 
 % Classes / Courses.
 {% if classes and classes|length > 0 %}
-\section*{ {{- labels.classes | default('Courses') -}} }
-\begin{itemize}
-  {% for c in classes %}
-    \item {{ c.name | tex_escape }}{% if c.provider %} — {{ c.provider | tex_escape }}{% endif %}{% if c.year %} ({{ c.year }}){% endif %}
-  {% endfor %}
-\end{itemize}
+  \section*{ {{- labels.classes | default('Courses') -}} }
+  \cvitem{}{
+    \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for c in classes %}
+        \item {{ c.name | tex_escape }}{% if c.provider %} — {{ c.provider | tex_escape }}{% endif %}{% if c.year %} ({{ c.year }}){% endif %}
+      {% endfor %}
+    \end{itemize}
+  }
 {% endif %}
 
 % Awards.
 {% if awards and awards|length > 0 %}
-\section*{ {{- labels.awards | default('Awards') -}} }
-\begin{itemize}
-  {% for a in awards %}
-    \item {{ a | tex_escape }}
-  {% endfor %}
-\end{itemize}
+  \section*{ {{- labels.awards | default('Awards') -}} }
+  \cvitem{}{
+    \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for a in awards %}
+        \item {{ a | tex_escape }}
+      {% endfor %}
+    \end{itemize}
+  }
 {% endif %}
 
 % Certifications.
 {% if certifications and certifications|length > 0 %}
-\section*{ {{- labels.certifications | default('Certifications') -}} }
-\begin{itemize}
-  {% for c in certifications %}
-    \item {{ c | tex_escape }}
-  {% endfor %}
-\end{itemize}
+  \section*{ {{- labels.certifications | default('Certifications') -}} }
+  \cvitem{}{
+    \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for c in certifications %}
+        \item {{ c | tex_escape }}
+      {% endfor %}
+    \end{itemize}
+  }
 {% endif %}
 
 % Languages.
 {% if languages and languages|length > 0 %}
-\section*{ {{- labels.languages | default('Languages') -}} }
-{% for lang in languages %}
-  {% if lang.name %}
-    \cvitem{}{ {{ lang.name | tex_escape }}{% if lang.level %} — {{ lang.level | tex_escape }}{% endif %} }
-  {% endif %}
-{% endfor %}
+  \section*{ {{- labels.languages | default('Languages') -}} }
+  \cvitem{}{
+    \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for lang in languages %}
+        \item {{ lang.name | tex_escape }}{% if lang.level %} — {{ lang.level | tex_escape }}{% endif %}
+      {% endfor %}
+    \end{itemize}
+  }
 {% endif %}
 
 % Publications.
 {% if publications and publications|length > 0 %}
-\section*{ {{- labels.publications | default('Publications') -}} }
-\begin{itemize}
-  {% for pub in publications %}
-    \item {{ pub | tex_escape }}
-  {% endfor %}
-\end{itemize}
+  \section*{ {{- labels.publications | default('Publications') -}} }
+  \cvitem{}{
+    \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for pub in publications %}
+        \item {{ pub | tex_escape }}
+      {% endfor %}
+    \end{itemize}
+  }
 {% endif %}
 
 % Talks.
 {% if talks and talks|length > 0 %}
-\section*{ {{- labels.talks | default('Talks') -}} }
-\begin{itemize}
-  {% for t in talks %}
-    \item {{ t | tex_escape }}
-  {% endfor %}
-\end{itemize}
+  \section*{ {{- labels.talks | default('Talks') -}} }
+  \cvitem{}{
+    \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for t in talks %}
+        \item {{ t | tex_escape }}
+      {% endfor %}
+    \end{itemize}
+  }
 {% endif %}
 
 % Interests
 {% if interests and interests|length > 0 %}
-\section*{ {{- labels.interests | default('Interests') -}} }
-\cvitem{}{ {{- interests | map('tex_escape') | join(', ') -}} }
+  \section*{ {{- labels.interests | default('Interests') -}} }
+  \cvitem{}{
+    \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for i in interests %}
+        \item {{ i | tex_escape }}
+      {% endfor %}
+    \end{itemize}
+  }
 {% endif %}
 
 % Recommendations.
 {% if recommendations and recommendations|length > 0 %}
-\section*{ {{- labels.recommendations | default('Recommendations') -}} }
-\begin{itemize}
-  {% for r in recommendations %}
-    \item \textbf{ {{- r.name | tex_escape -}} }{% if r.title %}, {{ r.title | tex_escape }}{% endif %}{% if r.relation %} — {{ r.relation | tex_escape -}}{% endif %}.\\
-    {% if r.text %}{{ r.text | tex_escape }}\\{% endif %}
-    {% if r.contact %}{\small {{ labels.contact | default('Contact') | tex_escape -}}:
-       {% for k, v in r.contact.items() %}
-         {{ (labels.get('contact_type_' ~ k) or labels.get(k) or k) | tex_escape }}: {{ v | tex_escape }}{%- if not loop.last %}, {% endif %}
-       {% endfor %}
-     }{% endif %}
-  {% endfor %}
-\end{itemize}
+  \section*{ {{- labels.recommendations | default('Recommendations') -}} }
+  \cvitem{}{
+    \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for r in recommendations %}
+        \item \textbf{ {{- r.name | tex_escape -}} }{% if r.title %}, {{ r.title | tex_escape }}{% endif %}{% if r.relation %} — {{ r.relation | tex_escape -}}{% endif %}.
+        {% if r.text %}
+          \newline
+          {{ r.text | tex_escape }}
+        {% endif %}
+        {% if r.contact %}
+          \newline
+          \small {{ labels.contact | default('Contact') | tex_escape -}}:
+          {% for k, v in r.contact.items() %}
+            {{ (labels.get('contact_type_' ~ k) or labels.get(k) or k) | tex_escape }}: {{ v | tex_escape }}{%- if not loop.last %}, {% endif %}
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    \end{itemize}
+  }
 {% endif %}
 
 % Footer metrics (optional).
 {% if metrics %}
-\vfill
-{\footnotesize
-  {{ labels.generated | default('Generated') -}}: {{ generated_at | default('') }} ~---~
-  {{ labels.experience_caption | default('Experience') -}}: {{ metrics.experience_years | default(0) }} {{ labels.years_abbr | default('yrs') -}},
-  {{ labels.companies | default('Companies') -}}: {{ metrics.companies | default(0) -}},
-  {{ labels.projects | default('Projects') -}}: {{ metrics.projects | default(0) }}%
-}
+  \vfill{
+    \footnotesize
+    {{ labels.generated | default('Generated') -}}: {{ generated_at | default('') }} ~---~
+    {{ labels.experience_caption | default('Experience') -}}: {{ metrics.experience_years | default(0) }} {{ labels.years_abbr | default('yrs') -}},
+    {{ labels.companies | default('Companies') -}}: {{ metrics.companies | default(0) -}},
+    {{ labels.projects | default('Projects') -}}: {{ metrics.projects | default(0) }}
+  }
 {% endif %}
 
 \end{document}
