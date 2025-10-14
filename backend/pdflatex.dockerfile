@@ -21,6 +21,7 @@ RUN apt-get update \
         texlive-latex-extra \
         texlive-fonts-recommended \
         texlive-fonts-extra \
+        texlive-lang-european \
         texlive-lang-cyrillic \
         cm-super \
     && rm -rf /var/lib/apt/lists/*

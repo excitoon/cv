@@ -1,88 +1,131 @@
 version: 1
 generated_at: '2025-10-14'
-locale: ru_RU
+lang: en
+locale: en_US
 environment:
   color: green
+  style: classic
+  linkcolor: black
+  urlcolor: blue
 person:
-  name: Алекс Фалкон
-  title: Системный специалист
-  location: Гелиос-сити, Солярис
+  name: Alex Falcon
+  title: Systems Generalist
+  location: Helios City, Solaris
   contacts:
     email: alex.falcon@example.com
     phone: +1 555 000 1122
     github: https://github.com/afalcon
     linkedin: https://linkedin.com/in/afalcon
-  summary: Любопытный специалист, создающий надёжные системы и любящий нестандартные
-    задачи.
+  summary: Curious generalist building reliable systems with a taste for weird constraints.
 highlights:
-- Снизил задержку холодного старта сервисов на 47% с помощью поэтапного разогрева.
-- Объединил 60+ заданий в единый DAG с понятными SLA и контролем нагрузки.
+- Reduced cold-start latency for services by 47% using a staged prewarming pipeline.
+- Consolidated 60+ jobs into a single DAG with clear SLAs and backpressure.
 skills:
 - id: languages
-  group: Языки программирования
+  group: Programming languages
   items:
   - id: rust
     name: Rust
     level: advanced
     highlight: false
+    months: 21
+    years: 1.8
+    first_used: 2023-02
+    last_used: 2024-11
   - id: kotlin
     name: Kotlin
     level: advanced
     highlight: false
+    months: 18
+    years: 1.5
+    first_used: 2021-01
+    last_used: 2022-07
   - id: ts
     name: TypeScript
     level: intermediate
     highlight: false
+    months: 18
+    years: 1.5
+    first_used: 2019-03
+    last_used: 2020-09
 - id: data
-  group: Данные/Хранилища
+  group: Data/Storage
   items:
   - id: postgres
     name: PostgreSQL
     level: advanced
     highlight: false
+    months: 39
+    years: 3.2
+    first_used: 2021-01
+    last_used: 2024-11
   - id: redis
     name: Redis
     level: advanced
     highlight: false
+    months: 36
+    years: 3.0
+    first_used: 2019-03
+    last_used: 2022-07
 - id: platform
-  group: Платформа/Инфраструктура
+  group: Platform/Infra
   items:
   - id: k8s
     name: Kubernetes
     level: advanced
     highlight: false
+    months: 23
+    years: 1.9
+    first_used: 2019-03
+    last_used: 2023-01
   - id: tf
     name: Terraform
     level: intermediate
     highlight: false
+    months: 5
+    years: 0.4
+    first_used: 2022-08
+    last_used: 2023-01
   - id: nix
     name: Nix
     level: intermediate
     highlight: false
+    months: 5
+    years: 0.4
+    first_used: 2022-08
+    last_used: 2023-01
   - id: prom
     name: Prometheus
     level: advanced
     highlight: false
+    months: 21
+    years: 1.8
+    first_used: 2023-02
+    last_used: 2024-11
   - id: grpc
     name: gRPC
     level: advanced
     highlight: false
+    months: 39
+    years: 3.2
+    first_used: 2021-01
+    last_used: 2024-11
 languages:
-- name: Английский
+- name: English
   level: C1
-- name: Русский
+- name: Russian
   level: B2
-- name: Немецкий
+- name: German
   level: B1
-- name: Испанский
+- name: Spanish
   level: A2
-- name: Японский
+- name: Japanese
   level: A1
 experience:
 - employer: Acme Orbits
-  location: Клаудпорт, Терра
+  location: Cloudport, Terra
   url: https://acmeorbits.example.com
-  role: Инженер платформы
+  role: Platform Engineer
   start: 2022-08
   end: 2024-11
   duration_months: 27
@@ -100,11 +143,10 @@ experience:
     start: 2023-02
     end: 2024-11
     duration_months: 21
-    summary: Высокоскоростной приём событий с адаптивной пакетизацией и идемпотентными
-      приёмниками.
+    summary: High-rate event ingestion with adaptive batching and idempotent sinks.
     responsibilities:
-    - Реализовал gRPC-продюсеры с учётом обратного давления.
-    - Настроил партиционирование Postgres для 2 млрд строк/месяц.
+    - Implemented backpressure-aware gRPC producers.
+    - Tuned Postgres partitioning for 2B rows/month.
     skills:
     - id: rust
       name: Rust
@@ -128,15 +170,15 @@ experience:
     contributions:
     - repo: prom-community/awesome-exporters
       link: https://github.com/prom-community/awesome-exporters/pull/4242
-      note: Добавлены примеры конфигурации экспортера
+      note: Added exporter config examples
   - name: orbitctl
     type: employment
     start: 2022-08
     end: 2023-01
     duration_months: 5
-    summary: Единый CLI для развёртывания окружений и ротации секретов.
+    summary: Unified CLI to bootstrap environments and rotate secrets.
     responsibilities:
-    - Добавил герметичные сборки с помощью Nix flakes.
+    - Added hermetic builds via Nix flakes.
     skills:
     - id: nix
       name: Nix
@@ -153,9 +195,9 @@ experience:
     links: {}
     contributions: []
 - employer: Nebula Foundry
-  location: Нео-Аркадия
+  location: New Arcadia
   url: https://nebula.example.com
-  role: Инженер-программист
+  role: Software Engineer
   start: 2021-01
   end: 2022-07
   duration_months: 18
@@ -170,9 +212,9 @@ experience:
     start: 2021-01
     end: 2022-07
     duration_months: 18
-    summary: Инкрементальный движок синхронизации для разнородных источников.
+    summary: Incremental sync engine for heterogeneous data sources.
     responsibilities:
-    - Спроектировал возобновляемый протокол с семантикой at-least-once.
+    - Designed a resumable protocol with at-least-once semantics.
     skills:
     - id: kotlin
       name: Kotlin
@@ -195,7 +237,7 @@ experience:
 - employer: OpenAtlas
   location: null
   url: null
-  role: Участник
+  role: Contributor
   start: 2019-03
   end: 2020-09
   duration_months: 18
@@ -205,13 +247,13 @@ experience:
   - Kubernetes
   projects:
   - name: OpenAtlas Maps
-    type: volunteer
+    type: volunteering
     start: 2019-03
     end: 2020-09
     duration_months: 18
-    summary: Сообщественный туллинг для тайлинга карт и предпросмотра.
+    summary: Community tooling for map tiling and preview.
     responsibilities:
-    - Реализовал кэш тайлов и очередь пререндеринга.
+    - Built tile cache and prerender queue.
     skills:
     - id: ts
       name: TypeScript
@@ -229,88 +271,130 @@ experience:
     contributions: []
 education:
 - institution: University of Solaris
-  degree: Магистр
-  field: Распределённые системы
+  degree: MSc
+  field: Distributed Systems
   start: 2016
   end: 2018
-  location: Аврора, Солярис
+  location: Aurora, Solaris
 - institution: Terra Polytechnic
-  degree: Бакалавр
-  field: Компьютерная инженерия
+  degree: BSc
+  field: Computer Engineering
   start: 2012
   end: 2016
-  location: Терра Прайм
+  location: Terra Prime
 classes:
-- name: Потоковые системы
+- name: Streaming Systems
   provider: OpenLearn
   year: 2021
   link: https://learn.example.com/streaming
-- name: Надёжная инфраструктура
-  provider: Внутренний
+- name: Reliable Infrastructure
+  provider: In-house
   year: 2023
   link: https://intra.example.com/reliability
 recommendations:
-- name: Дана Ортис
-  title: Ведущий инженер
-  relation: Наставник в Acme Orbits
-  text: Стабильно выполнял задачи под давлением и повышал планку надёжности.
+- name: Dana Ortiz
+  title: Staff Engineer
+  relation: Mentor at Acme Orbits
+  text: Consistently delivered under pressure and raised the bar for reliability.
   contact:
     email: dana.ortiz@example.com
     linkedin: https://linkedin.com/in/dana-ortiz
-- name: Илья Серебров
-  title: Руководитель SRE
-  relation: Руководитель в Nebula Foundry
-  text: Прагматичный инженер с высокой ответственностью и отличным взаимодействием.
+- name: Ilya Serebrov
+  title: SRE Manager
+  relation: Manager at Nebula Foundry
+  text: Pragmatic engineer with strong ownership and great collaboration skills.
   contact:
     email: ilya.serebrov@example.com
 awards:
-- Победитель хакатона Solar Hack 2022
-- Лауреат конкурса Infra Excellence 2023
+- Solar Hack 2022 winner
+- Infra Excellence 2023 laureate
 certifications:
-- CKAD (Сертифицированный разработчик приложений Kubernetes)
-- Ассоциированный специалист HashiCorp Terraform
+- CKAD (Kubernetes Application Developer)
+- HashiCorp Terraform Associate
 publications:
-- Идемпотентные конвейеры событий на масштабе — TechConf 2024
-- Отладка обратного давления в продакшене — DevOps Weekly
+- Idempotent event pipelines at scale — TechConf 2024
+- Debugging backpressure in production — DevOps Weekly
 talks:
-- 'Обратное давление в gRPC: практические приёмы'
-- Nix для воспроизводимых сборок в мульти-репозитории
+- 'Backpressure in gRPC: practical techniques'
+- Nix for reproducible builds in a multi-repo
 interests:
-- Ретрокомпьютинг
-- Боулдеринг
-- Генеративная музыка
-- Вариативная типография
+- Retrocomputing
+- Bouldering
+- Generative music
+- Variable typography
 metrics:
   experience_years: 6
   companies: 3
   projects: 4
 labels:
-  summary: О себе
-  highlights: Ключевые достижения
-  skills: Навыки
-  experience: Опыт
-  education: Образование
-  classes: Курсы
-  recommendations: Рекомендации
-  languages: Языки
-  awards: Награды
-  certifications: Сертификации
-  publications: Публикации
-  talks: Доклады
-  interests: Интересы
-  present: по н.в.
-  skills_caption: Навыки
-  months_abbr: мес
-  years_abbr: лет
-  responsibilities: Обязанности
-  impact: Влияние
-  links: Ссылки
-  contributions: Вклад
-  contact: Контакты
-  generated: Сгенерировано
-  experience_caption: Опыт
-  companies: Компаний
-  projects: Проектов
+  summary: Summary
+  highlights: Highlights
+  skills: Skills
+  experience: Experience
+  education: Education
+  classes: Courses
+  recommendations: Recommendations
+  languages: Languages
+  awards: Awards
+  certifications: Certifications
+  publications: Publications
+  talks: Talks
+  interests: Interests
+  present: present
+  skills_caption: Skills
+  months_abbr: mo
+  years_abbr: yrs
+  responsibilities: Responsibilities
+  impact: Impact
+  links: Links
+  contributions: Contributions
+  contact: Contact
+  generated: Generated
+  experience_caption: Experience
+  companies: Companies
+  projects: Projects
   github: GitHub
   linkedin: LinkedIn
-  telegram: Телеграм
+  telegram: Telegram
+  skill_expert: expert
+  skill_advanced: advanced
+  skill_intermediate: intermediate
+  skill_beginner: beginner
+  skill_hacker: hacker
+  skill_cool: cool
+  skill_sucks: sucks
+  skill_rocks: rocks
+  skill_zero: zero
+  project_type_employment: employment
+  project_type_freelance: freelance
+  project_type_personal: personal
+  project_type_open_source: open source
+  project_type_volunteering: volunteering
+  contact_type_email: e-mail
+  contact_type_phone: phone
+  contact_type_website: website
+  contact_type_github: GitHub
+  contact_type_linkedin: LinkedIn
+  contact_type_telegram: Telegram
+  contact_type_twitter: Twitter
+  contact_type_facebook: Facebook
+  contact_type_stackoverflow: StackOverflow
+  contact_type_instagram: Instagram
+  contact_type_vk: VK
+  contact_type_skype: Skype
+  contact_type_whatsapp: WhatsApp
+  contact_type_signal: Signal
+  contact_type_wechat: WeChat
+  months_short:
+  - Jan
+  - Feb
+  - Mar
+  - Apr
+  - May
+  - Jun
+  - Jul
+  - Aug
+  - Sep
+  - Oct
+  - Nov
+  - Dec

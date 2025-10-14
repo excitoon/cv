@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
+import datetime
 import importlib
 import os
-import sys
+import shutil
 
 import click
 import yaml
@@ -50,12 +51,18 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         out_dir=out_dir,
     )
 
-    if configuration == 'sample' and data['data']['person']['name']['en'] == 'Alex Falcon':
+    sample_mode = configuration == 'sample' and data['data']['person']['name']['en'] == 'Alex Falcon'
+
+    if sample_mode:
         i = renderer.expand_intermediate()
         with open('intermediate.example.yaml', 'w', encoding='utf-8') as f:
             yaml.safe_dump(i, f, allow_unicode=True, indent=2, sort_keys=False)
 
     renderer.render()
+
+    if sample_mode:
+        name = f'build/sample-{language}-{datetime.datetime.now().strftime("%Y-%m-%d")}.pdf'
+        shutil.copyfile(name, f'example-{language}.pdf')
 
 
 if __name__ == '__main__':

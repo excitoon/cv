@@ -6,6 +6,9 @@ configurations:
     backend: pdflatex
     environment:
       color: green
+      style: classic
+      linkcolor: black
+      urlcolor: blue
 
 data:
   person:
@@ -78,7 +81,7 @@ data:
       name:
         en: OpenAtlas
         ru: OpenAtlas
-      type: volunteer
+      type: volunteering
       roles:
       - title:
           en: Contributor
@@ -148,7 +151,7 @@ data:
         en: OpenAtlas Maps
         ru: OpenAtlas Maps
       employer: openatlas
-      type: volunteer
+      type: volunteering
       start: "2019-03"
       end: "2020-09"
       summary:
@@ -183,7 +186,9 @@ data:
 
   education:
     uni_sol:
-      institution: University of Solaris
+      institution:
+        en: University of Solaris
+        ru: Университет Соляриса
       degree:
         en: MSc
         ru: Магистр
@@ -196,7 +201,9 @@ data:
         en: Aurora, Solaris
         ru: Аврора, Солярис
     poly_terra:
-      institution: Terra Polytechnic
+      institution:
+        en: Terra Polytechnic
+        ru: Политехнический институт Терры
       degree:
         en: BSc
         ru: Бакалавр

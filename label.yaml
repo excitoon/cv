@@ -85,3 +85,134 @@ linkedin:
 telegram:
   en: Telegram
   ru: Телеграм
+
+skill_expert:
+  en: expert
+  ru: эксперт
+skill_advanced:
+  en: advanced
+  ru: продвинутый
+skill_intermediate:
+  en: intermediate
+  ru: средний
+skill_beginner:
+  en: beginner
+  ru: начальный
+skill_hacker:
+  en: hacker
+  ru: хакер
+skill_cool:
+  en: cool
+  ru: хороший
+skill_sucks:
+  en: sucks
+  ru: слабый
+skill_rocks:
+  en: rocks
+  ru: отличный
+skill_zero:
+  en: zero
+  ru: отсутствует
+
+project_type_employment:
+  en: employment
+  ru: наёмная работа
+project_type_freelance:
+  en: freelance
+  ru: фриланс
+project_type_personal:
+  en: personal
+  ru: личный
+project_type_open_source:
+  en: open source
+  ru: open source
+project_type_volunteering:
+  en: volunteering
+  ru: волонтёрство
+
+contact_type_email:
+  en: e-mail
+  ru: e-mail
+contact_type_phone:
+  en: phone
+  ru: телефон
+contact_type_website:
+  en: website
+  ru: сайт
+contact_type_github:
+  en: GitHub
+  ru: GitHub
+contact_type_linkedin:
+  en: LinkedIn
+  ru: LinkedIn
+contact_type_telegram:
+  en: Telegram
+  ru: Телеграм
+contact_type_twitter:
+  en: Twitter
+  ru: Twitter
+contact_type_facebook:
+  en: Facebook
+  ru: Facebook
+contact_type_stackoverflow:
+  en: StackOverflow
+  ru: StackOverflow
+contact_type_instagram:
+  en: Instagram
+  ru: Instagram
+contact_type_vk:
+  en: VK
+  ru: VK
+contact_type_skype:
+  en: Skype
+  ru: Skype
+contact_type_whatsapp:
+  en: WhatsApp
+  ru: WhatsApp
+contact_type_signal:
+  en: Signal
+  ru: Signal
+contact_type_wechat:
+  en: WeChat
+  ru: WeChat
+
+months_short:
+  en:
+    - Jan
+    - Feb
+    - Mar
+    - Apr
+    - May
+    - Jun
+    - Jul
+    - Aug
+    - Sep
+    - Oct
+    - Nov
+    - Dec
+  ru:
+    - янв
+    - фев
+    - мар
+    - апр
+    - май
+    - июн
+    - июл
+    - авг
+    - сен
+    - окт
+    - ноя
+    - дек
+  pl:
+    - sty
+    - lut
+    - mar
+    - kwi
+    - maj
+    - cze
+    - lip
+    - sie
+    - wrz
+    - paź
+    - lis
+    - gru

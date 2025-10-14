@@ -1,11 +1,14 @@
 \documentclass[11pt,a4paper]{moderncv}
-\PassOptionsToPackage{colorlinks=true, linkcolor=black, urlcolor=blue}{hyperref}
 
-\moderncvstyle{classic}
+% Pass options early to avoid clashes when moderncv loads packages.
+\PassOptionsToPackage{protrusion=true,expansion=false}{microtype}
+\PassOptionsToPackage{colorlinks=true,linkcolor={{- environment.linkcolor | default('black') -}},urlcolor={{- environment.urlcolor | default('blue') -}} }{hyperref}
+
+\moderncvstyle{ {{- environment.style | default('classic') -}} }
 \moderncvicons{marvosym}
-\moderncvcolor{ {{ environment.color | default('blue') }} }
+\moderncvcolor{ {{- environment.color | default('blue') -}} }
 
-% Encoding and language
+% Encoding and language.
 \usepackage[utf8]{inputenc}
 {% set l = (locale or 'en_US') | lower %}
 \usepackage[T1{% if 'ru' in l %},T2A{% endif %}]{fontenc}
@@ -19,186 +22,205 @@
 \usepackage[{{babel_opts}}]{babel}
 \selectlanguage{ {{- mainlang -}} }
 
-% Layout and misc
+% Layout and misc.
 \usepackage{geometry}
 \geometry{margin=1.6cm}
-\setlength{\hintscolumnwidth}{2.8cm}
-% Narrower name block brings last name closer
-\setlength{\makecvtitlenamewidth}{ {{ environment.name_width | default('7.8cm') }} }
-\hyphenpenalty=10000\exhyphenpenalty=10000\emergencystretch=2em
+
+% Adapt hints column width for languages with longer labels.
+{% set lang2 = (lang or 'en') | lower %}
+{% set hints_w = environment.hints_width or ( '3.4cm' if lang2 in ['ru','pl'] else '2.8cm' ) %}
+\setlength{\hintscolumnwidth}{ {{- hints_w -}} }
+
+% Enable proper hyphenation; keep some stretch for narrow columns.
+\emergencystretch=2em
+\tolerance=1200
+
+% Micro-typography options passed above; moderncv loads microtype.
 
 \usepackage{enumitem}
-\setlist[itemize]{leftmargin=*, itemsep=2pt, topsep=2pt}
+\usepackage{ragged2e}
 \usepackage{url}
+\usepackage{changepage}
 
 \AtBeginDocument{
   \hypersetup{colorlinks=true, linkcolor=black, urlcolor=blue}
 }
 
-% Person data
+% Person data.
 {% set p = person or {} %}
 {% set full = (p.name or '')|trim %}
 {% set parts = full.split() %}
 {% set first = p.get('first') or (parts[:-1]|join(' ') if parts|length>1 else full) %}
 {% set last = p.get('last') or (parts[-1] if parts|length>1 else '') %}
-\name{ {{ first }} }{ {\mbox{ {{ last }} }} }
-{% if p.title %}\title{ {\raggedright {{ p.title }} } }{% endif %}
-{% if p.location %}\address{ {{ p.location }} }{}{}{% endif %}
+\name{ {{- first -}} }{ {{- last -}} }
+{% if p.title %}\title{ {\raggedright{ {{- p.title -}} } } }{% endif %}
+{% if p.location %}\address{ {{- p.location -}} }{}{}{% endif %}
 
 % Use moderncv contact macros (no custom \extrainfo links)
 {% if p.contacts %}
-  {% if p.contacts.email %}\email{ {{ p.contacts.email }} }{% endif %}
-  {% if p.contacts.phone %}\phone{ {{ p.contacts.phone }} }{% endif %}
+  {% if p.contacts.email %}\email{ {{- p.contacts.email -}} }{% endif %}
+  {% if p.contacts.phone %}\phone{ {{- p.contacts.phone -}} }{% endif %}
   {% if p.contacts.website %}
     {% set w = p.contacts.website %}
     {% set wl = w|replace('https://','')|replace('http://','')|replace('www.','') %}
-    \homepage{ {{ wl }} }
+    \homepage{ {{- wl -}} }
   {% endif %}
   {% if p.contacts.github %}
     {% set g = p.contacts.github %}
     {% set gu = g.split('/')[-1] if '://' in g else g %}
-    \social[github]{ {{ gu }} }
+    \social[github]{ {{- gu -}} }
   {% endif %}
   {% if p.contacts.linkedin %}
     {% set li = p.contacts.linkedin %}
     {% set liu = li.split('/')[-1] if '://' in li else li %}
-    \social[linkedin]{ {{ liu }} }
+    \social[linkedin]{ {{- liu -}} }
   {% endif %}
   {% if p.contacts.telegram %}
     {% set tg = p.contacts.telegram %}
     {% set tgu = tg.split('/')[-1] if '://' in tg else tg %}
-    \social[telegram]{ {{ tgu }} }
+    \social[telegram]{ {{- tgu -}} }
   {% endif %}
 {% endif %}
 
 \begin{document}
 \makecvtitle
 
-% Summary
+% Summary.
 {% if p.summary %}
-\section*{ {{ labels.summary | default('Summary') }} }
-\cvitem{}{ {{ p.summary }} }
+\section*{ {{- labels.summary | default('Summary') -}} }
+\cvitem{}{ {{- p.summary | tex_escape -}} }
 {% endif %}
 
-% Highlights
+% Highlights.
 {% if highlights and highlights|length > 0 %}
-\section*{ {{ labels.highlights | default('Highlights') }} }
+\section*{ {{- labels.highlights | default('Highlights') -}} }
 \begin{itemize}
   {% for h in highlights %}
-  \item {{ h }}
+  \item {{ h | tex_escape }}
   {% endfor %}
 \end{itemize}
 {% endif %}
 
-% Skills
+% Skills.
 {% if skills and skills|length > 0 %}
-\section*{ {{ labels.skills | default('Skills') }} }
+\section*{ {{- labels.skills | default('Skills') -}} }
 {% for group in skills %}
   {% set items_list = (group["items"] or []) %}
   {% if items_list|length > 0 %}
-  \cvitem{ {{ (group["group"] or (group.get("name") or "")) }} }{
+  {% set raw_label = (group["group"] or (group.get("name") or "")) %}
+  {% set label_tex = raw_label | tex_escape %}
+  {% set label = label_tex | replace('/', '/\\allowbreak{}') %}
+  \cvitem{ \parbox[t]{\hintscolumnwidth}{\RaggedLeft {{ label -}} } }{
     {% for s in items_list %}
-      {% if s.highlight %}\textbf{ {{ s.name }} }{% else %}{{ s.name }}{% endif %}
-      {% if s.level %} (\textit{ {{ s.level }} }){% endif %}
-      {% if not loop.last %}, {% endif %}
+      {% if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{% else %}{{- s.name | tex_escape -}}{% endif %}
+        {% if s.level or (s.months and s.months > 0) %} (%
+          \textit{{- '{' -}}
+            {%- if s.level -%}
+              {{- (labels.get('skill_' ~ s.level) or s.level) -}}
+            {%- endif -%}
+            {% if s.level and (s.months and s.months > 0) -%}, {% endif %}
+            {% if s.months and s.months > 0 %}{{- s.months }} {{ labels.months_abbr | default('mo') -}}{% endif %}
+          {{- '' -}} }%
+        ){% endif %}
+      {%- if not loop.last %}, {% endif %}
     {% endfor %}
   }
   {% endif %}
 {% endfor %}
 {% endif %}
 
-% Languages
-{% if languages and languages|length > 0 %}
-\section*{ {{ labels.languages | default('Languages') }} }
-{% for lang in languages %}
-  {% if lang.name %}
-    \cvitem{}{ {{ lang.name }}{% if lang.level %} — {{ lang.level }}{% endif %} }
+% Experience.
+{% if experience and experience|length > 0 %}
+\section*{ {{- labels.experience | default('Experience') -}} }
+{% for e in experience %}
+  {% set e_start = (e.start | fmt_ym(lang)) or '?' %}
+  {% set e_end = (e.end | fmt_ym(lang)) or (labels.present | default('present')) %}
+  {% set period = e_start ~ ' -- ' ~ e_end %}
+  {% if e.duration_months %}{% set period = period ~ ' (' ~ e.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}
+    \cventry{ {{- period -}} }{ {{- (e.role or '') | tex_escape -}} }{ {{- (e.employer or '') | tex_escape -}} }{ {{- (e.location or '') | tex_escape -}} }{}{
+      {% if e.keywords %}\footnotesize\emph{ {{- (e.keywords | map('tex_escape') | list) | join(', ') -}} }\normalsize\\[2pt]{% endif %}
+    }
+    \begin{adjustwidth}{\hintscolumnwidth+\separatorcolumnwidth}{0pt}
+    {% if e.projects and e.projects|length > 0 %}
+      \begin{itemize}[leftmargin=*, itemsep=-8pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+      {% for pr in e.projects %}
+        \item \textbf{ {{- (pr.name | default('Project')) | tex_escape -}} }
+        {% if pr.type %}
+          (\textit{ {{- labels.get('project_type_' ~ pr.type) | default(pr.type) -}} })
+        {% endif %}%
+        {% set pr_s = (pr.start | fmt_ym(lang)) or '?' %}
+        {% set pr_e = (pr.end | fmt_ym(lang)) or (labels.present | default('present')) %}
+        {% set pr_period = pr_s ~ ' -- ' ~ pr_e %}
+        {% if pr.duration_months %}{% set pr_period = pr_period ~ ' (' ~ pr.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}%
+        — {\small {{ pr_period -}} }\\
+        {% if pr.summary %}{{ pr.summary | tex_escape }}\\{% endif %}
+        {% if pr.skills and pr.skills|length > 0 %}
+          {\small {{ labels.skills_caption | default('Skills') -}}:
+            {% for s in pr.skills %}
+              {% if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{% else %}{{ s.name | tex_escape }}{% endif %}
+              {% if not loop.last %}, {% endif %}
+            {% endfor %}
+          }\\
+        {% endif %}
+        {% if pr.responsibilities and pr.responsibilities|length > 0 %}
+          {{ labels.responsibilities | default('Responsibilities') -}}:
+          \begin{itemize}
+            {% for r in pr.responsibilities %}
+            \item {{ r | tex_escape }}
+            {% endfor %}
+          \end{itemize}
+        {% endif %}
+        {% if pr.impact and pr.impact|length > 0 %}
+          {{ labels.impact | default('Impact') -}}:
+          \begin{itemize}
+            {% for im in pr.impact %}
+            \item {{ im | tex_escape }}
+            {% endfor %}
+          \end{itemize}
+        {% endif %}
+        {% if pr.links %}
+          {\small {{ labels.links | default('Links') -}}:
+            {% for k, v in pr.links.items() %}
+              \href{ {{- v -}} }{ {{- k -}} }{% if not loop.last %}, {% endif %}
+            {% endfor %}
+          }\\
+        {% endif %}
+        {% if pr.contributions and pr.contributions|length > 0 %}
+          {\small {{ labels.contributions | default('Contributions') -}}:
+            {% for c in pr.contributions %}
+              {% if c.link %}
+                \href{ {{- c.link -}} }{ {{- c.repo or 'repo' -}} }
+              {% else %}
+                {{ c.repo or 'repo' }}
+              {% endif %}
+              {% if c.note %} — {{ c.note }}{% endif %}
+              {% if not loop.last %}; {% endif %}
+            {% endfor %}
+          }\\
+        {% endif %}
+      {% endfor %}
+    \end{itemize}
+    \end{adjustwidth}
   {% endif %}
 {% endfor %}
 {% endif %}
 
-% Experience
-{% if experience and experience|length > 0 %}
-\section*{ {{ labels.experience | default('Experience') }} }
-{% for e in experience %}
-  {% set period = (e.start or '?') ~ ' -- ' ~ (e.end or (labels.present | default('present'))) %}
-  {% if e.duration_months %}{% set period = period ~ ' (' ~ e.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}
-  \cventry{ {{ period }} }{ {{ e.role | default('') }} }{ {{ e.employer | default('') }} }{ {{ e.location | default('') }} }{}{
-    {% if e.keywords %}\footnotesize\emph{ {{ e.keywords | join(', ') }} }\normalsize\\[2pt]{% endif %}
-    {% if e.projects and e.projects|length > 0 %}
-      \begin{itemize}
-        {% for pr in e.projects %}
-          \item \textbf{ {{ pr.name | default('Project') }} }%
-          {% if pr.type %} (\textit{ {{ pr.type }} }){% endif %}%
-          {% set pr_period = (pr.start or '?') ~ ' -- ' ~ (pr.end or (labels.present | default('present'))) %}
-          {% if pr.duration_months %}{% set pr_period = pr_period ~ ' (' ~ pr.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}%
-          — {\small {{ pr_period }} }\\
-          {% if pr.summary %}{{ pr.summary }}\\{% endif %}
-          {% if pr.skills and pr.skills|length > 0 %}
-            {\small {{ labels.skills_caption | default('Skills') }}:
-               {% for s in pr.skills %}
-                 {% if s.highlight %}\textbf{ {{ s.name }} }{% else %}{{ s.name }}{% endif %}
-                 {% if not loop.last %}, {% endif %}
-               {% endfor %}
-             }\\
-          {% endif %}
-          {% if pr.responsibilities and pr.responsibilities|length > 0 %}
-            {{ labels.responsibilities | default('Responsibilities') }}:
-             \begin{itemize}
-               {% for r in pr.responsibilities %}
-               \item {{ r }}
-               {% endfor %}
-             \end{itemize}
-          {% endif %}
-          {% if pr.impact and pr.impact|length > 0 %}
-            {{ labels.impact | default('Impact') }}:
-             \begin{itemize}
-               {% for im in pr.impact %}
-               \item {{ im }}
-               {% endfor %}
-             \end{itemize}
-          {% endif %}
-          {% if pr.links %}
-            {\small {{ labels.links | default('Links') }}:
-               {% for k, v in pr.links.items() %}
-                 \href{ {{ v }} }{ {{ k }} }{% if not loop.last %}, {% endif %}
-               {% endfor %}
-             }\\
-          {% endif %}
-          {% if pr.contributions and pr.contributions|length > 0 %}
-            {\small {{ labels.contributions | default('Contributions') }}:
-               {% for c in pr.contributions %}
-                 {% if c.link %}
-                   \href{ {{ c.link }} }{ {{ c.repo or 'repo' }} }
-                 {% else %}
-                   {{ c.repo or 'repo' }}
-                 {% endif %}
-                 {% if c.note %} — {{ c.note }}{% endif %}
-                 {% if not loop.last %}; {% endif %}
-               {% endfor %}
-             }\\
-          {% endif %}
-        {% endfor %}
-      \end{itemize}
-    {% endif %}
-  }
-{% endfor %}
-{% endif %}
-
-% Education
+% Education.
 {% if education and education|length > 0 %}
-\section*{ {{ labels.education | default('Education') }} }
+\section*{ {{- labels.education | default('Education') -}} }
 {% for ed in education %}
-  {% set years = (ed.start | string) ~ ' -- ' ~ (ed.end | string) if ed.start or ed.end else '' %}
-  \cventry{ {{ years }} }{ {{ ed.degree | default('') }} }{ {{ ed.institution | default('') }} }{ {{ ed.location | default('') }} }{}{
+  {% set ys = (ed.start | fmt_ym(lang)) if ed.start else '' %}
+  {% set ye = (ed.end | fmt_ym(lang)) if ed.end else '' %}
+  {% set years = (ys ~ ' -- ' ~ ye) if ys or ye else '' %}
+  \cventry{ {{- years -}} }{ {{- ed.degree | default('') -}} }{ {{- ed.institution | default('') -}} }{ {{- ed.location | default('') -}} }{}{
     {% if ed.field %}{{ ed.field }}{% endif %}
   }
 {% endfor %}
 {% endif %}
 
-% Classes / Courses
+% Classes / Courses.
 {% if classes and classes|length > 0 %}
-\section*{ {{ labels.classes | default('Courses') }} }
+\section*{ {{- labels.classes | default('Courses') -}} }
 \begin{itemize}
   {% for c in classes %}
     \item {{ c.name }}{% if c.provider %} — {{ c.provider }}{% endif %}{% if c.year %} ({{ c.year }}){% endif %}
@@ -206,25 +228,9 @@
 \end{itemize}
 {% endif %}
 
-% Recommendations
-{% if recommendations and recommendations|length > 0 %}
-\section*{ {{ labels.recommendations | default('Recommendations') }} }
-\begin{itemize}
-  {% for r in recommendations %}
-    \item \textbf{ {{ r.name }} }{% if r.title %}, {{ r.title }}{% endif %}{% if r.relation %} — {{ r.relation }}{% endif %}.\\
-    {% if r.text %}{{ r.text }}\\{% endif %}
-    {% if r.contact %}{\small {{ labels.contact | default('Contact') }}:
-       {% for k, v in r.contact.items() %}
-         {{ k }}: {{ v }}{% if not loop.last %}, {% endif %}
-       {% endfor %}
-     }{% endif %}
-  {% endfor %}
-\end{itemize}
-{% endif %}
-
-% Awards
+% Awards.
 {% if awards and awards|length > 0 %}
-\section*{ {{ labels.awards | default('Awards') }} }
+\section*{ {{- labels.awards | default('Awards') -}} }
 \begin{itemize}
   {% for a in awards %}
     \item {{ a }}
@@ -232,9 +238,9 @@
 \end{itemize}
 {% endif %}
 
-% Certifications
+% Certifications.
 {% if certifications and certifications|length > 0 %}
-\section*{ {{ labels.certifications | default('Certifications') }} }
+\section*{ {{- labels.certifications | default('Certifications') -}} }
 \begin{itemize}
   {% for c in certifications %}
     \item {{ c }}
@@ -242,9 +248,19 @@
 \end{itemize}
 {% endif %}
 
-% Publications
+% Languages.
+{% if languages and languages|length > 0 %}
+\section*{ {{- labels.languages | default('Languages') -}} }
+{% for lang in languages %}
+  {% if lang.name %}
+    \cvitem{}{ {{ lang.name }}{% if lang.level %} — {{ lang.level }}{% endif %} }
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+% Publications.
 {% if publications and publications|length > 0 %}
-\section*{ {{ labels.publications | default('Publications') }} }
+\section*{ {{- labels.publications | default('Publications') -}} }
 \begin{itemize}
   {% for pub in publications %}
     \item {{ pub }}
@@ -252,9 +268,9 @@
 \end{itemize}
 {% endif %}
 
-% Talks
+% Talks.
 {% if talks and talks|length > 0 %}
-\section*{ {{ labels.talks | default('Talks') }} }
+\section*{ {{- labels.talks | default('Talks') -}} }
 \begin{itemize}
   {% for t in talks %}
     \item {{ t }}
@@ -264,18 +280,34 @@
 
 % Interests
 {% if interests and interests|length > 0 %}
-\section*{ {{ labels.interests | default('Interests') }} }
-\cvitem{}{ {{ interests | join(', ') }} }
+\section*{ {{- labels.interests | default('Interests') -}} }
+\cvitem{}{ {{- interests | join(', ') -}} }
 {% endif %}
 
-% Footer metrics (optional)
+% Recommendations.
+{% if recommendations and recommendations|length > 0 %}
+\section*{ {{- labels.recommendations | default('Recommendations') -}} }
+\begin{itemize}
+  {% for r in recommendations %}
+    \item \textbf{ {{- r.name -}} }{% if r.title %}, {{ r.title }}{% endif %}{% if r.relation %} — {{ r.relation -}}{% endif %}.\\
+    {% if r.text %}{{ r.text }}\\{% endif %}
+    {% if r.contact %}{\small {{ labels.contact | default('Contact') -}}:
+       {% for k, v in r.contact.items() %}
+         {{ labels.get('contact_type_' ~ k) or labels.get(k) or k }}: {{ v }}{%- if not loop.last %}, {% endif %}
+       {% endfor %}
+     }{% endif %}
+  {% endfor %}
+\end{itemize}
+{% endif %}
+
+% Footer metrics (optional).
 {% if metrics %}
 \vfill
 {\footnotesize
-  {{ labels.generated | default('Generated') }}: {{ generated_at | default('') }} ~---~
-  {{ labels.experience_caption | default('Experience') }}: {{ metrics.experience_years | default(0) }} {{ labels.years_abbr | default('yrs') }},
-  {{ labels.companies | default('Companies') }}: {{ metrics.companies | default(0) }},
-  {{ labels.projects | default('Projects') }}: {{ metrics.projects | default(0) }}%
+  {{ labels.generated | default('Generated') -}}: {{ generated_at | default('') }} ~---~
+  {{ labels.experience_caption | default('Experience') -}}: {{ metrics.experience_years | default(0) }} {{ labels.years_abbr | default('yrs') -}},
+  {{ labels.companies | default('Companies') -}}: {{ metrics.companies | default(0) -}},
+  {{ labels.projects | default('Projects') -}}: {{ metrics.projects | default(0) }}%
 }
 {% endif %}
 
