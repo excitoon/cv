@@ -313,7 +313,7 @@ certifications:
 - HashiCorp Terraform Associate
 publications:
 - Idempotent event pipelines at scale — TechConf 2024
-- Debugging backpressure in production — DevOps Weekly
+- 'Debugging backpressure in production — DevOps Weekly #312'
 talks:
 - 'Backpressure in gRPC: practical techniques'
 - Nix for reproducible builds in a multi-repo

@@ -212,8 +212,8 @@
   {% set ys = (ed.start | fmt_ym(lang)) if ed.start else '' %}
   {% set ye = (ed.end | fmt_ym(lang)) if ed.end else '' %}
   {% set years = (ys ~ ' -- ' ~ ye) if ys or ye else '' %}
-  \cventry{ {{- years -}} }{ {{- ed.degree | default('') -}} }{ {{- ed.institution | default('') -}} }{ {{- ed.location | default('') -}} }{}{
-    {% if ed.field %}{{ ed.field }}{% endif %}
+  \cventry{ {{- years -}} }{ {{- (ed.degree | default('') | tex_escape) -}} }{ {{- (ed.institution | default('') | tex_escape) -}} }{ {{- (ed.location | default('') | tex_escape) -}} }{}{
+    {% if ed.field %}{{ ed.field | tex_escape }}{% endif %}
   }
 {% endfor %}
 {% endif %}
@@ -223,7 +223,7 @@
 \section*{ {{- labels.classes | default('Courses') -}} }
 \begin{itemize}
   {% for c in classes %}
-    \item {{ c.name }}{% if c.provider %} — {{ c.provider }}{% endif %}{% if c.year %} ({{ c.year }}){% endif %}
+    \item {{ c.name | tex_escape }}{% if c.provider %} — {{ c.provider | tex_escape }}{% endif %}{% if c.year %} ({{ c.year }}){% endif %}
   {% endfor %}
 \end{itemize}
 {% endif %}
@@ -233,7 +233,7 @@
 \section*{ {{- labels.awards | default('Awards') -}} }
 \begin{itemize}
   {% for a in awards %}
-    \item {{ a }}
+    \item {{ a | tex_escape }}
   {% endfor %}
 \end{itemize}
 {% endif %}
@@ -243,7 +243,7 @@
 \section*{ {{- labels.certifications | default('Certifications') -}} }
 \begin{itemize}
   {% for c in certifications %}
-    \item {{ c }}
+    \item {{ c | tex_escape }}
   {% endfor %}
 \end{itemize}
 {% endif %}
@@ -253,7 +253,7 @@
 \section*{ {{- labels.languages | default('Languages') -}} }
 {% for lang in languages %}
   {% if lang.name %}
-    \cvitem{}{ {{ lang.name }}{% if lang.level %} — {{ lang.level }}{% endif %} }
+    \cvitem{}{ {{ lang.name | tex_escape }}{% if lang.level %} — {{ lang.level | tex_escape }}{% endif %} }
   {% endif %}
 {% endfor %}
 {% endif %}
@@ -263,7 +263,7 @@
 \section*{ {{- labels.publications | default('Publications') -}} }
 \begin{itemize}
   {% for pub in publications %}
-    \item {{ pub }}
+    \item {{ pub | tex_escape }}
   {% endfor %}
 \end{itemize}
 {% endif %}
@@ -273,7 +273,7 @@
 \section*{ {{- labels.talks | default('Talks') -}} }
 \begin{itemize}
   {% for t in talks %}
-    \item {{ t }}
+    \item {{ t | tex_escape }}
   {% endfor %}
 \end{itemize}
 {% endif %}
@@ -281,7 +281,7 @@
 % Interests
 {% if interests and interests|length > 0 %}
 \section*{ {{- labels.interests | default('Interests') -}} }
-\cvitem{}{ {{- interests | join(', ') -}} }
+\cvitem{}{ {{- interests | map('tex_escape') | join(', ') -}} }
 {% endif %}
 
 % Recommendations.
@@ -289,11 +289,11 @@
 \section*{ {{- labels.recommendations | default('Recommendations') -}} }
 \begin{itemize}
   {% for r in recommendations %}
-    \item \textbf{ {{- r.name -}} }{% if r.title %}, {{ r.title }}{% endif %}{% if r.relation %} — {{ r.relation -}}{% endif %}.\\
-    {% if r.text %}{{ r.text }}\\{% endif %}
-    {% if r.contact %}{\small {{ labels.contact | default('Contact') -}}:
+    \item \textbf{ {{- r.name | tex_escape -}} }{% if r.title %}, {{ r.title | tex_escape }}{% endif %}{% if r.relation %} — {{ r.relation | tex_escape -}}{% endif %}.\\
+    {% if r.text %}{{ r.text | tex_escape }}\\{% endif %}
+    {% if r.contact %}{\small {{ labels.contact | default('Contact') | tex_escape -}}:
        {% for k, v in r.contact.items() %}
-         {{ labels.get('contact_type_' ~ k) or labels.get(k) or k }}: {{ v }}{%- if not loop.last %}, {% endif %}
+         {{ (labels.get('contact_type_' ~ k) or labels.get(k) or k) | tex_escape }}: {{ v | tex_escape }}{%- if not loop.last %}, {% endif %}
        {% endfor %}
      }{% endif %}
   {% endfor %}

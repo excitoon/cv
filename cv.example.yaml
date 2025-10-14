@@ -377,8 +377,8 @@ data:
   publications:
   - en: Idempotent event pipelines at scale — TechConf 2024
     ru: Идемпотентные конвейеры событий на масштабе — TechConf 2024
-  - en: Debugging backpressure in production — DevOps Weekly #312
-    ru: Отладка обратного давления в продакшене — DevOps Weekly #312
+  - en: "Debugging backpressure in production — DevOps Weekly #312"
+    ru: "Отладка обратного давления в продакшене — DevOps Weekly #312"
 
   talks:
   - en: "Backpressure in gRPC: practical techniques"
