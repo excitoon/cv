@@ -4,11 +4,19 @@ import datetime
 import importlib
 import os
 import shutil
+import sys
+import zlib
 
 import click
+import xxhash
 import yaml
 
 import backend
+
+
+def compute_config_hash(name: str) -> str:
+    s = (name or '').encode('utf-8')
+    return xxhash.xxh32(s).hexdigest()
 
 
 def load_yaml(path: str) -> dict:
@@ -39,7 +47,10 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
     environment = build_settings['environment']
     basename = build_settings['basename']
 
-    Renderer = getattr(importlib.import_module(f'backend.{build_settings['backend']}'), 'Renderer')
+    backend_mod = importlib.import_module(f"backend.{build_settings['backend']}")
+    Renderer = getattr(backend_mod, 'Renderer')
+
+    config_hash = compute_config_hash(configuration)
     renderer: backend.BaseRenderer = Renderer(
         data=data['data'],
         labels=labels,
@@ -49,6 +60,8 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         dockerfile=dockerfile,
         environment=environment,
         out_dir=out_dir,
+        configuration=configuration,
+        config_hash=config_hash,
     )
 
     sample_mode = configuration == 'sample' and data['data']['person']['name']['en'] == 'Alex Falcon'
@@ -58,11 +71,10 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         with open('intermediate.example.yaml', 'w', encoding='utf-8') as f:
             yaml.safe_dump(i, f, allow_unicode=True, indent=2, sort_keys=False)
 
-    renderer.render()
+    output_path = renderer.render()
 
     if sample_mode:
-        name = f'build/sample-{language}-{datetime.datetime.now().strftime("%Y-%m-%d")}.pdf'
-        shutil.copyfile(name, f'example-{language}.pdf')
+        shutil.copyfile(output_path, f'example-{language}.pdf')
 
 
 if __name__ == '__main__':

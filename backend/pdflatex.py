@@ -337,10 +337,15 @@ class Renderer(backend.BaseRenderer):
 
         basename = getattr(self, 'basename', None) or (intermediate.get('person') or {}).get('name') or 'cv'
         base_slug = _slugify(basename)
+        cfg_hash = getattr(self, 'config_hash', None)
+        cfg_hash_short = (str(cfg_hash)[:8]) if cfg_hash else None
         lang = getattr(self, 'language', None) or 'en'
         lang_token = str(lang).replace('_', '-').split('-')[0].lower() or 'en'
         today = datetime.date.today()
-        stem = f'{base_slug}-{lang_token}-{today.year:04d}-{today.month:02d}-{today.day:02d}'
+        if cfg_hash_short:
+            stem = f'{base_slug}-{cfg_hash_short}-{lang_token}-{today.year:04d}-{today.month:02d}-{today.day:02d}'
+        else:
+            stem = f'{base_slug}-{lang_token}-{today.year:04d}-{today.month:02d}-{today.day:02d}'
         output_pdf = os.path.join(out_dir, stem + '.pdf')
         output_log = os.path.join(out_dir, stem + '.log')
         output_tex = os.path.join(out_dir, stem + '.tex')

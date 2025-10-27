@@ -1,28 +1,29 @@
 version: 1
-generated_at: '2025-10-14'
-lang: en
-locale: en_US
+generated_at: '2025-10-27'
+lang: ru
+locale: ru_RU
 environment:
   color: green
   style: classic
   linkcolor: black
   urlcolor: blue
 person:
-  name: Alex Falcon
-  title: Systems Generalist
-  location: Helios City, Solaris
+  name: Алекс Фалкон
+  title: Системный специалист
+  location: Гелиос-сити, Солярис
   contacts:
     email: alex.falcon@example.com
     phone: +1 555 000 1122
     github: https://github.com/afalcon
     linkedin: https://linkedin.com/in/afalcon
-  summary: Curious generalist building reliable systems with a taste for weird constraints.
+  summary: Любопытный специалист, создающий надёжные системы и любящий нестандартные
+    задачи.
 highlights:
-- Reduced cold-start latency for services by 47% using a staged prewarming pipeline.
-- Consolidated 60+ jobs into a single DAG with clear SLAs and backpressure.
+- Снизил задержку холодного старта сервисов на 47% с помощью поэтапного разогрева.
+- Объединил 60+ заданий в единый DAG с понятными SLA и контролем нагрузки.
 skills:
 - id: languages
-  group: Programming languages
+  group: Языки программирования
   items:
   - id: rust
     name: Rust
@@ -49,7 +50,7 @@ skills:
     first_used: 2019-03
     last_used: 2020-09
 - id: data
-  group: Data/Storage
+  group: Данные/Хранилища
   items:
   - id: postgres
     name: PostgreSQL
@@ -68,7 +69,7 @@ skills:
     first_used: 2019-03
     last_used: 2022-07
 - id: platform
-  group: Platform/Infra
+  group: Платформа/Инфраструктура
   items:
   - id: k8s
     name: Kubernetes
@@ -111,21 +112,21 @@ skills:
     first_used: 2021-01
     last_used: 2024-11
 languages:
-- name: English
+- name: Английский
   level: C1
-- name: Russian
+- name: Русский
   level: B2
-- name: German
+- name: Немецкий
   level: B1
-- name: Spanish
+- name: Испанский
   level: A2
-- name: Japanese
+- name: Японский
   level: A1
 experience:
 - employer: Acme Orbits
-  location: Cloudport, Terra
+  location: Клаудпорт, Терра
   url: https://acmeorbits.example.com
-  role: Platform Engineer
+  role: Инженер платформы
   start: 2022-08
   end: 2024-11
   duration_months: 27
@@ -143,10 +144,11 @@ experience:
     start: 2023-02
     end: 2024-11
     duration_months: 21
-    summary: High-rate event ingestion with adaptive batching and idempotent sinks.
+    summary: Высокоскоростной приём событий с адаптивной пакетизацией и идемпотентными
+      приёмниками.
     responsibilities:
-    - Implemented backpressure-aware gRPC producers.
-    - Tuned Postgres partitioning for 2B rows/month.
+    - Реализовал gRPC-продюсеры с учётом обратного давления.
+    - Настроил партиционирование Postgres для 2 млрд строк/месяц.
     skills:
     - id: rust
       name: Rust
@@ -170,15 +172,15 @@ experience:
     contributions:
     - repo: prom-community/awesome-exporters
       link: https://github.com/prom-community/awesome-exporters/pull/4242
-      note: Added exporter config examples
+      note: Добавлены примеры конфигурации экспортера
   - name: orbitctl
     type: employment
     start: 2022-08
     end: 2023-01
     duration_months: 5
-    summary: Unified CLI to bootstrap environments and rotate secrets.
+    summary: Единый CLI для развёртывания окружений и ротации секретов.
     responsibilities:
-    - Added hermetic builds via Nix flakes.
+    - Добавил герметичные сборки с помощью Nix flakes.
     skills:
     - id: nix
       name: Nix
@@ -195,9 +197,9 @@ experience:
     links: {}
     contributions: []
 - employer: Nebula Foundry
-  location: New Arcadia
+  location: Нео-Аркадия
   url: https://nebula.example.com
-  role: Software Engineer
+  role: Инженер-программист
   start: 2021-01
   end: 2022-07
   duration_months: 18
@@ -212,9 +214,9 @@ experience:
     start: 2021-01
     end: 2022-07
     duration_months: 18
-    summary: Incremental sync engine for heterogeneous data sources.
+    summary: Инкрементальный движок синхронизации для разнородных источников.
     responsibilities:
-    - Designed a resumable protocol with at-least-once semantics.
+    - Спроектировал возобновляемый протокол с семантикой at-least-once.
     skills:
     - id: kotlin
       name: Kotlin
@@ -237,7 +239,7 @@ experience:
 - employer: OpenAtlas
   location: null
   url: null
-  role: Contributor
+  role: Участник
   start: 2019-03
   end: 2020-09
   duration_months: 18
@@ -251,9 +253,9 @@ experience:
     start: 2019-03
     end: 2020-09
     duration_months: 18
-    summary: Community tooling for map tiling and preview.
+    summary: Сообщественный туллинг для тайлинга карт и предпросмотра.
     responsibilities:
-    - Built tile cache and prerender queue.
+    - Реализовал кэш тайлов и очередь пререндеринга.
     skills:
     - id: ts
       name: TypeScript
@@ -270,112 +272,112 @@ experience:
     links: {}
     contributions: []
 education:
-- institution: University of Solaris
-  degree: MSc
-  field: Distributed Systems
+- institution: Университет Соляриса
+  degree: Магистр
+  field: Распределённые системы
   start: 2016
   end: 2018
-  location: Aurora, Solaris
-- institution: Terra Polytechnic
-  degree: BSc
-  field: Computer Engineering
+  location: Аврора, Солярис
+- institution: Политехнический институт Терры
+  degree: Бакалавр
+  field: Компьютерная инженерия
   start: 2012
   end: 2016
-  location: Terra Prime
+  location: Терра Прайм
 classes:
-- name: Streaming Systems
+- name: Потоковые системы
   provider: OpenLearn
   year: 2021
   link: https://learn.example.com/streaming
-- name: Reliable Infrastructure
-  provider: In-house
+- name: Надёжная инфраструктура
+  provider: Внутренний
   year: 2023
   link: https://intra.example.com/reliability
 recommendations:
-- name: Dana Ortiz
-  title: Staff Engineer
-  relation: Mentor at Acme Orbits
-  text: Consistently delivered under pressure and raised the bar for reliability.
+- name: Дана Ортис
+  title: Ведущий инженер
+  relation: Наставник в Acme Orbits
+  text: Стабильно выполнял задачи под давлением и повышал планку надёжности.
   contact:
     email: dana.ortiz@example.com
     linkedin: https://linkedin.com/in/dana-ortiz
-- name: Ilya Serebrov
-  title: SRE Manager
-  relation: Manager at Nebula Foundry
-  text: Pragmatic engineer with strong ownership and great collaboration skills.
+- name: Илья Серебров
+  title: Руководитель SRE
+  relation: Руководитель в Nebula Foundry
+  text: Прагматичный инженер с высокой ответственностью и отличным взаимодействием.
   contact:
     email: ilya.serebrov@example.com
 awards:
-- Solar Hack 2022 winner
-- Infra Excellence 2023 laureate
+- Победитель хакатона Solar Hack 2022
+- Лауреат конкурса Infra Excellence 2023
 certifications:
-- CKAD (Kubernetes Application Developer)
-- HashiCorp Terraform Associate
+- CKAD (Сертифицированный разработчик приложений Kubernetes)
+- Ассоциированный специалист HashiCorp Terraform
 publications:
-- Idempotent event pipelines at scale — TechConf 2024
-- 'Debugging backpressure in production — DevOps Weekly #312'
+- Идемпотентные конвейеры событий на масштабе — TechConf 2024
+- 'Отладка обратного давления в продакшене — DevOps Weekly #312'
 talks:
-- 'Backpressure in gRPC: practical techniques'
-- Nix for reproducible builds in a multi-repo
+- 'Обратное давление в gRPC: практические приёмы'
+- Nix для воспроизводимых сборок в мульти-репозитории
 interests:
-- Retrocomputing
-- Bouldering
-- Generative music
-- Variable typography
+- Ретрокомпьютинг
+- Боулдеринг
+- Генеративная музыка
+- Вариативная типография
 metrics:
   experience_years: 6
   companies: 3
   projects: 4
 labels:
-  summary: Summary
-  highlights: Highlights
-  skills: Skills
-  experience: Experience
-  education: Education
-  classes: Courses
-  recommendations: Recommendations
-  languages: Languages
-  awards: Awards
-  certifications: Certifications
-  publications: Publications
-  talks: Talks
-  interests: Interests
-  present: present
-  skills_caption: Skills
-  months_abbr: mo
-  years_abbr: yrs
-  responsibilities: Responsibilities
-  impact: Impact
-  links: Links
-  contributions: Contributions
-  contact: Contact
-  generated: Generated
-  experience_caption: Experience
-  companies: Companies
-  projects: Projects
+  summary: О себе
+  highlights: Ключевые достижения
+  skills: Навыки
+  experience: Опыт
+  education: Образование
+  classes: Курсы
+  recommendations: Рекомендации
+  languages: Языки
+  awards: Награды
+  certifications: Сертификации
+  publications: Публикации
+  talks: Доклады
+  interests: Интересы
+  present: по н.в.
+  skills_caption: Навыки
+  months_abbr: мес
+  years_abbr: лет
+  responsibilities: Обязанности
+  impact: Влияние
+  links: Ссылки
+  contributions: Вклад
+  contact: Контакты
+  generated: Сгенерировано
+  experience_caption: Опыт
+  companies: Компаний
+  projects: Проектов
   github: GitHub
   linkedin: LinkedIn
-  telegram: Telegram
-  skill_expert: expert
-  skill_advanced: advanced
-  skill_intermediate: intermediate
-  skill_beginner: beginner
-  skill_hacker: hacker
-  skill_cool: cool
-  skill_sucks: sucks
-  skill_rocks: rocks
-  skill_zero: zero
-  project_type_employment: employment
-  project_type_freelance: freelance
-  project_type_personal: personal
+  telegram: Телеграм
+  skill_expert: эксперт
+  skill_advanced: продвинутый
+  skill_intermediate: средний
+  skill_beginner: начальный
+  skill_hacker: хакер
+  skill_cool: хороший
+  skill_sucks: слабый
+  skill_rocks: отличный
+  skill_zero: отсутствует
+  project_type_employment: наёмная работа
+  project_type_freelance: фриланс
+  project_type_personal: личный
   project_type_open_source: open source
-  project_type_volunteering: volunteering
+  project_type_volunteering: волонтёрство
   contact_type_email: e-mail
-  contact_type_phone: phone
-  contact_type_website: website
+  contact_type_phone: телефон
+  contact_type_website: сайт
   contact_type_github: GitHub
   contact_type_linkedin: LinkedIn
-  contact_type_telegram: Telegram
+  contact_type_telegram: Телеграм
   contact_type_twitter: Twitter
   contact_type_facebook: Facebook
   contact_type_stackoverflow: StackOverflow
@@ -386,15 +388,15 @@ labels:
   contact_type_signal: Signal
   contact_type_wechat: WeChat
   months_short:
-  - Jan
-  - Feb
-  - Mar
-  - Apr
-  - May
-  - Jun
-  - Jul
-  - Aug
-  - Sep
-  - Oct
-  - Nov
-  - Dec
+  - янв
+  - фев
+  - мар
+  - апр
+  - май
+  - июн
+  - июл
+  - авг
+  - сен
+  - окт
+  - ноя
+  - дек

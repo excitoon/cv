@@ -7,7 +7,7 @@ import typing
 
 
 class BaseRenderer:
-    def __init__(self, data: dict, labels: dict, basename: str, language: str, template: str, dockerfile: str, environment: dict, out_dir: str):
+    def __init__(self, data: dict, labels: dict, basename: str, language: str, template: str, dockerfile: str, environment: dict, out_dir: str, configuration: str, config_hash: str):
         self.data = data
         self.labels = labels
         self.basename = basename
@@ -16,8 +16,10 @@ class BaseRenderer:
         self.dockerfile = dockerfile
         self.environment = environment
         self.out_dir = out_dir
+        self.configuration = configuration
+        self.config_hash = config_hash
 
-    def render(self) -> None:
+    def render(self) -> str:
         raise NotImplementedError('Subclasses should implement this method.')
 
     def run_in_docker(
