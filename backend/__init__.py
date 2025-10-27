@@ -7,17 +7,33 @@ import typing
 
 
 class BaseRenderer:
-    def __init__(self, data: dict, labels: dict, basename: str, language: str, template: str, dockerfile: str, environment: dict, out_dir: str, configuration: str, config_hash: str):
-        self.data = data
-        self.labels = labels
-        self.basename = basename
-        self.language = language
+    def __init__(
+        self,
+        data: dict,
+        labels: dict,
+        basename: str,
+        language: str,
+        template: str,
+        dockerfile: str,
+        environment: dict | None,
+        out_dir: str,
+        configuration: str | None = None,
+        config_hash: str | None = None,
+        exclude_projects: typing.Iterable[str] | None = None,
+        root_dir: str | None = None,
+    ):
+        self.data = data or {}
+        self.labels = labels or {}
+        self.basename = basename or 'cv'
+        self.language = language or 'en'
         self.template = template
         self.dockerfile = dockerfile
-        self.environment = environment
-        self.out_dir = out_dir
+        self.environment = dict(environment or {})
+        self.out_dir = out_dir or 'build/'
         self.configuration = configuration
         self.config_hash = config_hash
+        self.exclude_projects = [str(x) for x in (exclude_projects or [])]
+        self.root_dir = root_dir
 
     def render(self) -> str:
         raise NotImplementedError('Subclasses should implement this method.')
@@ -51,7 +67,7 @@ class BaseRenderer:
         # Internal image tag (derived from basename).
         base = (self.basename or 'cv').lower()
         safe = ''.join(ch if ch.isalnum() or ch in '-._' else '-' for ch in base).strip('-.')
-        image_tag = f'{safe or 'cv'}:latest'
+        image_tag = f"{safe or 'cv'}:latest"
 
         # Build image.
         build_cmd = ['docker', 'build', '-t', image_tag, '-f', df_path, context_dir]

@@ -46,6 +46,8 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
     dockerfile = build_settings['dockerfile']
     environment = build_settings['environment']
     basename = build_settings['basename']
+    # Optional: list of project IDs to exclude for this configuration.
+    exclude_projects = build_settings.get('exclude-projects') or build_settings.get('exclude_projects') or []
 
     backend_mod = importlib.import_module(f"backend.{build_settings['backend']}")
     Renderer = getattr(backend_mod, 'Renderer')
@@ -62,6 +64,7 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         out_dir=out_dir,
         configuration=configuration,
         config_hash=config_hash,
+        exclude_projects=exclude_projects,
     )
 
     sample_mode = configuration == 'sample' and data['data']['person']['name']['en'] == 'Alex Falcon'

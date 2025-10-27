@@ -112,6 +112,8 @@ class Renderer(backend.BaseRenderer):
 
         # Projects grouped by employer.
         projects_raw: dict[str, dict] = raw.get('projects') or {}
+        # Optionally exclude some projects by ID based on configuration.
+        exclude_projects: set[str] = set([str(x) for x in (getattr(self, 'exclude_projects', []) or [])])
         by_employer: dict[str, list[dict]] = {}
 
         # Accumulate per-skill usage across projects.
@@ -129,7 +131,9 @@ class Renderer(backend.BaseRenderer):
                 })
             return out
 
-        for _, pr in (projects_raw or {}).items():
+        for pid, pr in (projects_raw or {}).items():
+            if pid in exclude_projects:
+                continue
             emp_key = pr.get('employer')
             if not emp_key:
                 continue
