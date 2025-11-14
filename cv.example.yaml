@@ -262,74 +262,51 @@ data:
       level: A1
 
   skills:
-    registry:
-      rust:
-        name:
-          en: Rust
-          ru: Rust
-        level: advanced
-      kotlin:
-        name:
-          en: Kotlin
-          ru: Kotlin
-        level: advanced
-      ts:
-        name:
-          en: TypeScript
-          ru: TypeScript
-        level: intermediate
-      postgres:
-        name:
-          en: PostgreSQL
-          ru: PostgreSQL
-        level: advanced
-      redis:
-        name:
-          en: Redis
-          ru: Redis
-        level: advanced
-      k8s:
-        name:
-          en: Kubernetes
-          ru: Kubernetes
-        level: advanced
-      tf:
-        name:
-          en: Terraform
-          ru: Terraform
-        level: intermediate
-      nix:
-        name:
-          en: Nix
-          ru: Nix
-        level: intermediate
-      prom:
-        name:
-          en: Prometheus
-          ru: Prometheus
-        level: advanced
-      grpc:
-        name:
-          en: gRPC
-          ru: gRPC
-        level: advanced
-
     groups:
-    - id: languages
-      name:
+    - name:
         en: Programming languages
         ru: Языки программирования
-      items: [rust, kotlin, ts]
-    - id: data
-      name:
+      skills:
+      - id: rust
+        name: { en: Rust, ru: Rust }
+        level: advanced
+      - id: kotlin
+        name: { en: Kotlin, ru: Kotlin }
+        level: advanced
+      - id: ts
+        name: { en: TypeScript, ru: TypeScript }
+        level: intermediate
+
+    - name:
         en: Data/Storage
         ru: Данные/Хранилища
-      items: [postgres, redis]
-    - id: platform
-      name:
+      skills:
+      - id: postgres
+        name: { en: PostgreSQL, ru: PostgreSQL }
+        level: advanced
+      - id: redis
+        name: { en: Redis, ru: Redis }
+        level: advanced
+
+    - name:
         en: Platform/Infra
         ru: Платформа/Инфраструктура
-      items: [k8s, tf, nix, prom, grpc]
+      skills:
+      - id: k8s
+        name: { en: Kubernetes, ru: Kubernetes }
+        level: advanced
+      - id: tf
+        name: { en: Terraform, ru: Terraform }
+        level: intermediate
+      - id: nix
+        name: { en: Nix, ru: Nix }
+        level: intermediate
+      - id: prom
+        name: { en: Prometheus, ru: Prometheus }
+        level: advanced
+      - id: grpc
+        name: { en: gRPC, ru: gRPC }
+        level: advanced
 
   recommendations:
   - name:

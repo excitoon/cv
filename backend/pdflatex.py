@@ -84,19 +84,74 @@ class Renderer(backend.BaseRenderer):
         skills_raw = raw.get('skills') or {}
         registry: dict[str, dict] = skills_raw.get('registry') or {}
         groups_raw: list[dict] = skills_raw.get('groups') or []
+
+        # Build a unified skill index from registry and any inline group-defined skills.
+        skill_index: dict[str, dict] = {}
+        for sid, meta in (registry or {}).items():
+            sid_s = str(sid)
+            skill_index[sid_s] = {
+                'id': sid_s,
+                'name': tr((meta or {}).get('name') or sid_s),
+                'level': (meta or {}).get('level'),
+            }
+
+        # Pre-scan groups for inline 'skills' definitions to enrich/override the index.
+        for g in groups_raw:
+            inline = g.get('skills') or []
+            for sdef in inline:
+                if isinstance(sdef, dict):
+                    sid = str(sdef.get('id') or (sdef.get('name') or '')).strip()
+                    if not sid:
+                        continue
+                    skill_index[sid] = {
+                        'id': sid,
+                        'name': tr(sdef.get('name') or sid),
+                        'level': sdef.get('level') or (skill_index.get(sid) or {}).get('level'),
+                    }
+                else:
+                    sid = str(sdef)
+                    if sid and sid not in skill_index:
+                        skill_index[sid] = {'id': sid, 'name': tr(sid), 'level': None}
+
         skills: list[dict] = []
         for g in groups_raw:
             items_out: list[dict] = []
-            for sid in (g.get('items') or []):
-                meta = registry.get(str(sid)) or {}
-                items_out.append({
-                    'id': sid,
-                    'name': tr(meta.get('name') or sid),
-                    'level': meta.get('level'),
-                    'highlight': False,
-                })
+            if g.get('skills'):
+                # New format: group has inline skill objects or ids.
+                for sdef in (g.get('skills') or []):
+                    if isinstance(sdef, dict):
+                        sid = str(sdef.get('id') or (sdef.get('name') or '')).strip()
+                        if not sid:
+                            continue
+                        meta = (skill_index.get(sid) or {})
+                        items_out.append({
+                            'id': sid,
+                            'name': meta.get('name') or tr(sdef.get('name') or sid),
+                            'level': sdef.get('level') or meta.get('level'),
+                            'highlight': bool(sdef.get('highlight') or False),
+                        })
+                    else:
+                        sid = str(sdef)
+                        meta = (skill_index.get(sid) or {})
+                        items_out.append({
+                            'id': sid,
+                            'name': meta.get('name') or tr(sid),
+                            'level': meta.get('level'),
+                            'highlight': False,
+                        })
+            else:
+                # Backward-compatible format: references by ids in 'items'.
+                for sid in (g.get('items') or []):
+                    sid_s = str(sid)
+                    meta = (skill_index.get(sid_s) or {})
+                    items_out.append({
+                        'id': sid_s,
+                        'name': meta.get('name') or tr(sid_s),
+                        'level': meta.get('level'),
+                        'highlight': False,
+                    })
+
             skills.append({
-                'id': g.get('id'),
                 'group': tr(g.get('name') or g.get('id')),
                 'items': items_out,
             })
@@ -122,10 +177,10 @@ class Renderer(backend.BaseRenderer):
         def _skill_items_from_ids(ids: list[str]) -> list[dict]:
             out: list[dict] = []
             for sid in (ids or []):
-                meta = registry.get(str(sid)) or {}
+                meta = (skill_index.get(str(sid)) or {})
                 out.append({
                     'id': sid,
-                    'name': tr(meta.get('name') or sid),
+                    'name': meta.get('name') or tr(sid),
                     'level': meta.get('level'),
                     'highlight': False,
                 })

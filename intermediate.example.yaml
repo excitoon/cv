@@ -1,5 +1,5 @@
 version: 1
-generated_at: '2025-10-27'
+generated_at: '2025-11-14'
 lang: ru
 locale: ru_RU
 environment:
@@ -22,8 +22,7 @@ highlights:
 - Снизил задержку холодного старта сервисов на 47% с помощью поэтапного разогрева.
 - Объединил 60+ заданий в единый DAG с понятными SLA и контролем нагрузки.
 skills:
-- id: languages
-  group: Языки программирования
+- group: Языки программирования
   items:
   - id: rust
     name: Rust
@@ -49,8 +48,7 @@ skills:
     years: 1.5
     first_used: 2019-03
     last_used: 2020-09
-- id: data
-  group: Данные/Хранилища
+- group: Данные/Хранилища
   items:
   - id: postgres
     name: PostgreSQL
@@ -68,8 +66,7 @@ skills:
     years: 3.0
     first_used: 2019-03
     last_used: 2022-07
-- id: platform
-  group: Платформа/Инфраструктура
+- group: Платформа/Инфраструктура
   items:
   - id: k8s
     name: Kubernetes
