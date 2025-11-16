@@ -5,12 +5,13 @@ import importlib
 import os
 import shutil
 import sys
+import glob
 
 import click
 import yaml
 
 import backend
-from configuration import compute_config_hash, load_yaml, resolve_configuration
+from configuration import compute_config_hash, load_yaml, resolve_configuration, deep_merge_dicts
  
 
 
@@ -22,7 +23,23 @@ from configuration import compute_config_hash, load_yaml, resolve_configuration
 def main(configuration: str, yaml_path: str, language: str, out_dir: str):
     os.makedirs(out_dir, exist_ok=True)
 
-    data = load_yaml(os.path.expanduser(yaml_path))
+    root_path = os.path.expanduser(yaml_path)
+    data = load_yaml(root_path)
+
+    # Handle optional includes: glob patterns whose YAML contents are merged first.
+    include_patterns = data.get('include') or []
+    if include_patterns:
+        merged_includes: dict = {}
+        for pattern in include_patterns:
+            for path in sorted(glob.glob(pattern)):
+                try:
+                    inc = load_yaml(path)
+                    merged_includes = deep_merge_dicts(merged_includes, inc)
+                except Exception as e:
+                    click.echo(f'Warning: failed to load include file {path}: {e}.', err=True)
+        # Included content acts as a base; root overrides.
+        data = deep_merge_dicts(merged_includes, data)
+
     configs = data['configurations']
     labels = load_yaml('label.yaml')
 
