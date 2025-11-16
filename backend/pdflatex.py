@@ -358,8 +358,11 @@ class Renderer(backend.BaseRenderer):
 
         # Education.
         education_raw: dict[str, dict] = raw.get('education') or {}
+        exclude_edu: set[str] = set([str(x) for x in (getattr(self, 'exclude_education', []) or [])])
         education: list[dict] = []
-        for _, ed in education_raw.items():
+        for eid, ed in education_raw.items():
+            if str(eid) in exclude_edu:
+                continue
             education.append({
                 'institution': tr(ed.get('institution')),
                 'degree': tr(ed.get('degree')),
