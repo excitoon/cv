@@ -40,6 +40,10 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
     exclude_projects = build_settings.get('exclude-projects') or build_settings.get('exclude_projects') or []
     # Optional: list of education IDs to exclude for this configuration.
     exclude_education = build_settings.get('exclude-education') or build_settings.get('exclude_education') or []
+    # Optional: lists of language, skill, and skill group IDs to exclude.
+    exclude_languages = build_settings.get('exclude-languages') or build_settings.get('exclude_languages') or []
+    exclude_skills = build_settings.get('exclude-skills') or build_settings.get('exclude_skills') or []
+    exclude_skill_groups = build_settings.get('exclude-skill-groups') or build_settings.get('exclude_skill_groups') or []
 
     backend_mod = importlib.import_module(f"backend.{build_settings['backend']}")
     Renderer = getattr(backend_mod, 'Renderer')
@@ -58,6 +62,9 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         config_hash=config_hash,
         exclude_projects=exclude_projects,
         exclude_education=exclude_education,
+        exclude_languages=exclude_languages,
+        exclude_skills=exclude_skills,
+        exclude_skill_groups=exclude_skill_groups,
     )
 
     sample_mode = configuration == 'sample' and data['data']['person']['name']['en'] == 'Alex Falcon'

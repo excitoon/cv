@@ -84,6 +84,8 @@ class Renderer(backend.BaseRenderer):
         skills_raw = raw.get('skills') or {}
         registry: dict[str, dict] = skills_raw.get('registry') or {}
         groups_raw: list[dict] = skills_raw.get('groups') or []
+        exclude_skill_groups: set[str] = set([str(x) for x in (getattr(self, 'exclude_skill_groups', []) or [])])
+        exclude_skills: set[str] = set([str(x) for x in (getattr(self, 'exclude_skills', []) or [])])
 
         # Build a unified skill index from registry and any inline group-defined skills.
         skill_index: dict[str, dict] = {}
@@ -97,11 +99,17 @@ class Renderer(backend.BaseRenderer):
 
         # Pre-scan groups for inline 'skills' definitions to enrich/override the index.
         for g in groups_raw:
+            # Skip entire group if excluded (by group name or id field if present).
+            g_name_for_exclude = str(g.get('id') or g.get('name') or '').strip()
+            if g_name_for_exclude and g_name_for_exclude in exclude_skill_groups:
+                continue
             inline = g.get('skills') or []
             for sdef in inline:
                 if isinstance(sdef, dict):
                     sid = str(sdef.get('id') or (sdef.get('name') or '')).strip()
                     if not sid:
+                        continue
+                    if sid in exclude_skills:
                         continue
                     skill_index[sid] = {
                         'id': sid,
@@ -111,10 +119,19 @@ class Renderer(backend.BaseRenderer):
                 else:
                     sid = str(sdef)
                     if sid and sid not in skill_index:
+                        if sid in exclude_skills:
+                            continue
                         skill_index[sid] = {'id': sid, 'name': tr(sid), 'level': None}
 
         skills: list[dict] = []
+        filtered_groups_raw = []
         for g in groups_raw:
+            g_name_for_exclude = str(g.get('id') or g.get('name') or '').strip()
+            if g_name_for_exclude and g_name_for_exclude in exclude_skill_groups:
+                continue
+            filtered_groups_raw.append(g)
+
+        for g in filtered_groups_raw:
             items_out: list[dict] = []
             if g.get('skills'):
                 # New format: group has inline skill objects or ids.
@@ -122,6 +139,8 @@ class Renderer(backend.BaseRenderer):
                     if isinstance(sdef, dict):
                         sid = str(sdef.get('id') or (sdef.get('name') or '')).strip()
                         if not sid:
+                            continue
+                        if sid in exclude_skills:
                             continue
                         meta = (skill_index.get(sid) or {})
                         items_out.append({
@@ -132,6 +151,8 @@ class Renderer(backend.BaseRenderer):
                         })
                     else:
                         sid = str(sdef)
+                        if sid in exclude_skills:
+                            continue
                         meta = (skill_index.get(sid) or {})
                         items_out.append({
                             'id': sid,
@@ -143,6 +164,8 @@ class Renderer(backend.BaseRenderer):
                 # Backward-compatible format: references by ids in 'items'.
                 for sid in (g.get('items') or []):
                     sid_s = str(sid)
+                    if sid_s in exclude_skills:
+                        continue
                     meta = (skill_index.get(sid_s) or {})
                     items_out.append({
                         'id': sid_s,
@@ -159,7 +182,10 @@ class Renderer(backend.BaseRenderer):
         # Spoken languages.
         languages_raw = raw.get('languages') or {}
         languages: list[dict] = []
-        for _, lobj in languages_raw.items():
+        exclude_languages: set[str] = set([str(x) for x in (getattr(self, 'exclude_languages', []) or [])])
+        for lid, lobj in languages_raw.items():
+            if str(lid) in exclude_languages:
+                continue
             languages.append({'name': tr(lobj.get('name')), 'level': lobj.get('level')})
 
         # Contributions registry.
@@ -177,6 +203,8 @@ class Renderer(backend.BaseRenderer):
         def _skill_items_from_ids(ids: list[str]) -> list[dict]:
             out: list[dict] = []
             for sid in (ids or []):
+                if str(sid) in exclude_skills:
+                    continue
                 meta = (skill_index.get(str(sid)) or {})
                 out.append({
                     'id': sid,
@@ -212,6 +240,8 @@ class Renderer(backend.BaseRenderer):
             }
             # Accumulate skill usage for this project's skills.
             for sid in (pr.get('skills') or []):
+                if str(sid) in exclude_skills:
+                    continue
                 st = skill_stats.setdefault(str(sid), {'months': 0, 'first': None, 'last': None})
                 st['months'] = int(st.get('months', 0)) + int(pr_months)
                 if ps:

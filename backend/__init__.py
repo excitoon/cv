@@ -21,6 +21,9 @@ class BaseRenderer:
         config_hash: str | None = None,
         exclude_projects: typing.Iterable[str] | None = None,
         exclude_education: typing.Iterable[str] | None = None,
+        exclude_languages: typing.Iterable[str] | None = None,
+        exclude_skills: typing.Iterable[str] | None = None,
+        exclude_skill_groups: typing.Iterable[str] | None = None,
         root_dir: str | None = None,
     ):
         self.data = data or {}
@@ -35,6 +38,9 @@ class BaseRenderer:
         self.config_hash = config_hash
         self.exclude_projects = [str(x) for x in (exclude_projects or [])]
         self.exclude_education = [str(x) for x in (exclude_education or [])]
+        self.exclude_languages = [str(x) for x in (exclude_languages or [])]
+        self.exclude_skills = [str(x) for x in (exclude_skills or [])]
+        self.exclude_skill_groups = [str(x) for x in (exclude_skill_groups or [])]
         self.root_dir = root_dir
 
     def render(self) -> str:
