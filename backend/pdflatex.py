@@ -406,7 +406,36 @@ class Renderer(backend.BaseRenderer):
                 'location': tr(ed.get('location')),
             })
 
-        education.sort(key=lambda ed: (-(ed.get('end') or 0), -(ed.get('start') or 0)))
+        def _edu_ord(v: typing.Any, invert: bool = True) -> int:
+            """Convert year or YYYY-MM string/int to sortable numeric.
+
+            YYYY-MM -> YYYY*100 + MM
+            YYYY -> YYYY*100
+            Other/None -> 0
+            invert=True returns negative for descending sort.
+            """
+            if v is None:
+                return 0
+            if isinstance(v, int):
+                base = v * 100
+            else:
+                sv = str(v).strip()
+                if re.fullmatch(r"\d{4}-\d{2}", sv):
+                    y, m = sv.split('-')
+                    try:
+                        base = int(y) * 100 + int(m)
+                    except Exception:
+                        base = 0
+                elif re.fullmatch(r"\d{4}", sv):
+                    try:
+                        base = int(sv) * 100
+                    except Exception:
+                        base = 0
+                else:
+                    base = 0
+            return -base if invert else base
+
+        education.sort(key=lambda ed: (_edu_ord(ed.get('end')), _edu_ord(ed.get('start'))))
 
         # Classes.
         classes: list[dict] = []

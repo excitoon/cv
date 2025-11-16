@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 
-import datetime
 import importlib
 import os
 import shutil
@@ -12,7 +11,6 @@ import yaml
 
 import backend
 from configuration import compute_config_hash, load_yaml, resolve_configuration, deep_merge_dicts
- 
 
 
 @click.command(help='Render CV template')
@@ -41,7 +39,17 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         data = deep_merge_dicts(merged_includes, data)
 
     configs = data['configurations']
-    labels = load_yaml('label.yaml')
+    # Resolve label.yaml path: prefer same directory as this script, fallback to current working dir.
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    label_candidates = [os.path.join(script_dir, 'label.yaml'), 'label.yaml']
+    label_path = None
+    for cand in label_candidates:
+        if os.path.exists(cand):
+            label_path = cand
+            break
+    if not label_path:
+        raise click.UsageError('label.yaml not found in script directory or current working directory.')
+    labels = load_yaml(label_path)
 
     if configuration not in configs:
         available = ', '.join(sorted(configs.keys()))
@@ -51,6 +59,29 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
 
     template = build_settings['template']
     dockerfile = build_settings['dockerfile']
+
+    # Resolve template & dockerfile paths with additional subdir fallbacks.
+    def _resolve_with_candidates(original: str, extra_dirs: list[str]) -> str | None:
+        candidates: list[str] = []
+        # Original as-is (absolute or relative to CWD).
+        candidates.append(original if os.path.isabs(original) else os.path.abspath(original))
+        # Relative to script_dir.
+        candidates.append(os.path.join(script_dir, original))
+        # Under each extra directory inside script_dir.
+        for d in extra_dirs:
+            candidates.append(os.path.join(script_dir, d, original))
+        for c in candidates:
+            if os.path.exists(c):
+                return os.path.abspath(c)
+        return None
+
+    template_path = _resolve_with_candidates(template, ['template', 'templates'])
+    dockerfile_path = _resolve_with_candidates(dockerfile, ['backend', 'docker', 'dockerfiles'])
+    if not template_path:
+        raise click.UsageError(f'Template not found. Tried: {template}, script dir, and template subdirectories.')
+    if not dockerfile_path:
+        raise click.UsageError(f'Dockerfile not found. Tried: {dockerfile}, script dir, and backend/docker subdirectories.')
+
     environment = build_settings['environment']
     basename = build_settings['basename']
     # Optional: list of project IDs to exclude for this configuration.
@@ -71,8 +102,8 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         labels=labels,
         basename=basename,
         language=language,
-        template=template,
-        dockerfile=dockerfile,
+        template=template_path,
+        dockerfile=dockerfile_path,
         environment=environment,
         out_dir=out_dir,
         configuration=configuration,
