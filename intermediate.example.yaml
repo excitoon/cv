@@ -110,7 +110,7 @@ skills:
     last_used: 2024-11
 languages:
 - name: Английский
-  level: C1
+  level: native
 - name: Русский
   level: B2
 - name: Немецкий
@@ -384,6 +384,13 @@ labels:
   classes: Курсы
   recommendations: Рекомендации
   languages: Языки
+  language_level_native: родной
+  language_level_A1: начальный
+  language_level_A2: базовый
+  language_level_B1: средний
+  language_level_B2: выше среднего
+  language_level_C1: продвинутый
+  language_level_C2: владение в совершенстве
   awards: Награды
   certifications: Сертификации
   publications: Публикации

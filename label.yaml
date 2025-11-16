@@ -22,6 +22,27 @@ recommendations:
 languages:
   en: Languages
   ru: Языки
+language_level_native:
+  en: native
+  ru: родной
+language_level_A1:
+  en: beginner
+  ru: начальный
+language_level_A2:
+  en: elementary
+  ru: базовый
+language_level_B1:
+  en: intermediate
+  ru: средний
+language_level_B2:
+  en: upper-intermediate
+  ru: выше среднего
+language_level_C1:
+  en: advanced
+  ru: продвинутый
+language_level_C2:
+  en: proficient
+  ru: владение в совершенстве
 awards:
   en: Awards
   ru: Награды

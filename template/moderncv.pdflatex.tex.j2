@@ -308,7 +308,20 @@
   \cvitem{}{
     \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
       {% for lang in languages %}
-        \item {{ lang.name | tex_escape }}{% if lang.level %} — {{ lang.level | tex_escape }}{% endif %}
+        {% set lvl = (lang.level or '') %}
+        {% set lvl_str = (lvl|string) %}
+        {% set lvl_upper = lvl_str|upper %}
+        {% set lvl_lower = lvl_str|lower %}
+        {% if lvl_lower == 'native' %}
+          \item {{ lang.name | tex_escape }} — {{ (labels.language_level_native or 'native') | tex_escape }}
+        {% elif lvl_upper in ['A1','A2','B1','B2','C1','C2'] %}
+          {% set cap = labels['language_level_' ~ lvl_upper] or '' %}
+          \item {{ lang.name | tex_escape }} — {{ lvl_upper }}{% if cap %} ({{ cap | tex_escape }}){% endif %}
+        {% elif lvl %}
+          \item {{ lang.name | tex_escape }} — {{ lvl | tex_escape }}
+        {% else %}
+          \item {{ lang.name | tex_escape }}
+        {% endif %}
       {% endfor %}
     \end{itemize}
   }
