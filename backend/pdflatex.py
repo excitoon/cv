@@ -250,13 +250,84 @@ class Renderer(backend.BaseRenderer):
                 emp_end = max(filtered) if filtered else None
                 end_for_duration = emp_end or today
 
-            roles = emp.get('roles') or []
+            # Roles can change over time. Support "edge dates only":
+            # users may specify only the start month for each role change; we infer the end
+            # as the month before the next role's start, or the employer's end/present.
+            roles_raw = emp.get('roles') or []
+            roles_seq: list[dict] = []
+            # Capture original order to respect input if dates are missing.
+            for idx, r in enumerate(roles_raw):
+                rt = tr((r or {}).get('title'))
+                if not rt:
+                    continue
+                sd = _parse_date(r.get('start')) if (isinstance(r, dict) and 'start' in r) else None
+                ed = _parse_date(r.get('end')) if (isinstance(r, dict) and 'end' in r) else None
+                roles_seq.append({'idx': idx, 'title': rt, 'start_d': sd, 'end_d': ed})
+
+            def _prev_month(d: datetime.date) -> datetime.date:
+                y = d.year
+                m = d.month
+                if m == 1:
+                    return datetime.date(y - 1, 12, 1)
+                return datetime.date(y, m - 1, 1)
+
+            # Helper to compute next month
+            def _next_month(d: datetime.date) -> datetime.date:
+                y = d.year
+                m = d.month
+                if m == 12:
+                    return datetime.date(y + 1, 1, 1)
+                return datetime.date(y, m + 1, 1)
+
+            # Forward pass: infer missing ends from next role starts or employer end.
+            for i in range(len(roles_seq)):
+                r = roles_seq[i]
+                if r['end_d'] is None:
+                    next_start: datetime.date | None = None
+                    for j in range(i + 1, len(roles_seq)):
+                        ns = roles_seq[j]['start_d']
+                        if ns is not None:
+                            next_start = ns
+                            break
+                    if next_start is not None:
+                        roles_seq[i]['end_d'] = _prev_month(next_start)
+                    else:
+                        roles_seq[i]['end_d'] = emp_end  # May be None if ongoing.
+
+            # Backward pass: infer missing starts from previous role ends or employer start.
+            for i in range(len(roles_seq)):
+                r = roles_seq[i]
+                if r['start_d'] is None:
+                    if i > 0 and roles_seq[i - 1]['end_d'] is not None:
+                        roles_seq[i]['start_d'] = _next_month(roles_seq[i - 1]['end_d'])
+                    else:
+                        roles_seq[i]['start_d'] = emp_start
+
+            roles_out: list[dict] = []
+            for r in roles_seq:
+                start_d = r['start_d']
+                end_d = r['end_d']
+                ongoing_role = (end_d is None)
+                roles_out.append({
+                    'title': r['title'],
+                    'start': _fmt_ym(start_d) if start_d else None,
+                    'end': _fmt_ym(end_d) if end_d else None,
+                    'ongoing': ongoing_role,
+                })
+
+            # Choose representative role: the latest by start date (fallback: last listed)
             role_title = None
-            for r in roles:
-                rt = tr(r.get('title'))
-                if rt:
-                    role_title = rt
-                    break
+            if roles_out:
+                latest = None
+                for r in roles_out:
+                    sd = _parse_date(r.get('start')) if r.get('start') else None
+                    if latest is None:
+                        latest = (sd, r)
+                    else:
+                        prev_sd = latest[0]
+                        if sd and (prev_sd is None or sd > prev_sd):
+                            latest = (sd, r)
+                role_title = (latest[1]['title'] if latest else roles_out[-1]['title'])
 
             keywords: list[str] = []
             for p in projects:
@@ -274,6 +345,7 @@ class Renderer(backend.BaseRenderer):
                 'end': _fmt_ym(emp_end) if emp_end else None,
                 'duration_months': _months_between(emp_start, end_for_duration),
                 'keywords': keywords or None,
+                'roles': roles_out or None,
                 'projects': projects,
             })
 
@@ -355,6 +427,19 @@ class Renderer(backend.BaseRenderer):
         months_total = _months_between(earliest_start, latest_end_for_duration) or 0
         experience_years = max(int(round(months_total / 12.0)), 0)
 
+        # Normalize certifications: accept either strings or objects with name/provider/year.
+        certs_in = raw.get('certifications') or []
+        certifications: list[dict] = []
+        for c in certs_in:
+            if isinstance(c, dict):
+                certifications.append({
+                    'name': tr(c.get('name')),
+                    'provider': tr(c.get('provider')),
+                    'year': c.get('year'),
+                })
+            else:
+                certifications.append({'text': tr(c)})
+
         return {
             'version': 1,
             'generated_at': today.isoformat(),
@@ -370,7 +455,7 @@ class Renderer(backend.BaseRenderer):
             'classes': classes,
             'recommendations': recommendations,
             'awards': tr_list(raw.get('awards')),
-            'certifications': tr_list(raw.get('certifications')),
+            'certifications': certifications,
             'publications': tr_list(raw.get('publications')),
             'talks': tr_list(raw.get('talks')),
             'interests': tr_list(raw.get('interests')),

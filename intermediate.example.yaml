@@ -1,5 +1,5 @@
 version: 1
-generated_at: '2025-11-14'
+generated_at: '2025-11-16'
 lang: ru
 locale: ru_RU
 environment:
@@ -66,7 +66,7 @@ skills:
     years: 3.0
     first_used: 2019-03
     last_used: 2022-07
-- group: Платформа/Инфраструктура
+- group: Платформы/Инфраструктура
   items:
   - id: k8s
     name: Kubernetes
@@ -135,6 +135,15 @@ experience:
   - Nix
   - Terraform
   - Kubernetes
+  roles:
+  - title: Инженер-программист
+    start: 2022-08
+    end: 2023-01
+    ongoing: false
+  - title: Инженер платформы
+    start: 2023-02
+    end: 2024-11
+    ongoing: false
   projects:
   - name: Event Pulse
     type: employment
@@ -205,6 +214,11 @@ experience:
   - PostgreSQL
   - Redis
   - gRPC
+  roles:
+  - title: Инженер-программист
+    start: 2021-01
+    end: 2022-07
+    ongoing: false
   projects:
   - name: Nebula Graph Sync
     type: employment
@@ -244,6 +258,11 @@ experience:
   - TypeScript
   - Redis
   - Kubernetes
+  roles:
+  - title: Участник
+    start: 2019-03
+    end: 2020-09
+    ongoing: false
   projects:
   - name: OpenAtlas Maps
     type: volunteering
@@ -308,8 +327,12 @@ awards:
 - Победитель хакатона Solar Hack 2022
 - Лауреат конкурса Infra Excellence 2023
 certifications:
-- CKAD (Сертифицированный разработчик приложений Kubernetes)
-- Ассоциированный специалист HashiCorp Terraform
+- name: CKAD — Сертифицированный разработчик приложений Kubernetes
+  provider: CNCF
+  year: 2022
+- name: Сертифицированный специалист HashiCorp — Terraform Associate
+  provider: HashiCorp
+  year: 2021
 publications:
 - Идемпотентные конвейеры событий на масштабе — TechConf 2024
 - 'Отладка обратного давления в продакшене — DevOps Weekly #312'

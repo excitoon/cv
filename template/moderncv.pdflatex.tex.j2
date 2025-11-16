@@ -155,8 +155,27 @@
         {% if e.keywords %}\footnotesize\emph{ {{- (e.keywords | map('tex_escape') | list) | join(', ') -}} }\normalsize\\[2pt]{% endif %}
       }
       \begin{adjustwidth}{\hintscolumnwidth+\separatorcolumnwidth}{0pt}
+        {% if e.roles %}
+          {% set roles_len = e.roles|length %}
+          {% if roles_len > 1 %}
+            {% set roles_sorted = (e.roles | sort(attribute='start') | reverse | list) %}
+            {% set roles_prev = roles_sorted[1:] %}
+            \vspace{-12pt} % FIXME remove these ugly indentation hacks.
+            \begin{itemize}[leftmargin=*, label=\labelitemii, itemsep=1pt, topsep=0pt, partopsep=0pt, parsep=0pt, after=\vspace{10pt}]
+              {% for r in roles_prev %}
+                \item \textbf{ {{- r.title | tex_escape -}} }
+                {%- set rs = (r.start | fmt_ym(lang)) if r.start else '' -%}
+                {%- set re = (r.end | fmt_ym(lang)) if r.end else (labels.present | default('present')) if r.ongoing else '' -%}
+                {%- set rper = (rs ~ ' -- ' ~ re) if rs or re else '' -%}
+                {%- if rper %} — {\small {{ rper }} }{% endif -%}
+              {% endfor %}
+            \end{itemize}
+          {% else %}
+            % Single role; title already shown in cventry
+          {% endif %}
+        {% endif %}
         {% if e.projects and e.projects|length > 0 %}
-          \begin{itemize}[leftmargin=*, itemsep=-8pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
+          \begin{itemize}[leftmargin=*, itemsep=-8pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-6pt}]
           {% for pr in e.projects %}
             \item \textbf{ {{- (pr.name | default('Project')) | tex_escape -}} }
             {% if pr.type %}
@@ -264,7 +283,13 @@
   \cvitem{}{
     \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
       {% for c in certifications %}
-        \item {{ c | tex_escape }}
+        {% if c.name %}
+          \item {{ c.name | tex_escape }}{% if c.provider %} — {{ c.provider | tex_escape }}{% endif %}{% if c.year %} ({{ c.year }}){% endif %}
+        {% elif c.text %}
+          \item {{ c.text | tex_escape }}
+        {% else %}
+          \item {}
+        {% endif %}
       {% endfor %}
     \end{itemize}
   }
