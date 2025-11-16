@@ -226,9 +226,10 @@ class Renderer(backend.BaseRenderer):
             pe_for_duration = pe_raw or today
             pr_months = _months_between(ps, pe_for_duration) or 0
 
+            pr_type = str(pr.get('type', 'employment')).lower() if pr.get('type') else 'employment'
             entry = {
                 'name': tr(pr.get('name')),
-                'type': pr.get('type', 'employment'),
+                'type': pr_type,
                 'start': _fmt_ym(ps) if ps else None,
                 'end': None if ongoing else _fmt_ym(pe_raw),
                 'duration_months': _months_between(ps, pe_for_duration),
@@ -366,11 +367,13 @@ class Renderer(backend.BaseRenderer):
                     if nm and nm not in keywords:
                         keywords.append(nm)
 
+            emp_type = str(emp.get('type', 'employment')).lower() if emp.get('type') else 'employment'
             experience.append({
                 'employer': tr(emp.get('name')),
                 'location': tr(emp.get('location')),
                 'url': emp.get('url'),
                 'role': role_title,
+                'type': emp_type,
                 'start': _fmt_ym(emp_start) if emp_start else None,
                 'end': _fmt_ym(emp_end) if emp_end else None,
                 'duration_months': _months_between(emp_start, end_for_duration),

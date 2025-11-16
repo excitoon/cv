@@ -44,10 +44,10 @@ skills:
     name: TypeScript
     level: intermediate
     highlight: false
-    months: 18
-    years: 1.5
+    months: 26
+    years: 2.2
     first_used: 2019-03
-    last_used: 2020-09
+    last_used: 2022-11
 - group: Данные/Хранилища
   items:
   - id: postgres
@@ -62,10 +62,10 @@ skills:
     name: Redis
     level: advanced
     highlight: false
-    months: 36
-    years: 3.0
+    months: 44
+    years: 3.7
     first_used: 2019-03
-    last_used: 2022-07
+    last_used: 2022-11
 - group: Платформы/Инфраструктура
   items:
   - id: k8s
@@ -124,6 +124,7 @@ experience:
   location: Клаудпорт, Терра
   url: https://acmeorbits.example.com
   role: Инженер платформы
+  type: employment
   start: 2022-08
   end: 2024-11
   duration_months: 27
@@ -206,18 +207,20 @@ experience:
   location: Нео-Аркадия
   url: https://nebula.example.com
   role: Инженер-программист
+  type: employment
   start: 2021-01
-  end: 2022-07
-  duration_months: 18
+  end: 2022-11
+  duration_months: 22
   keywords:
   - Kotlin
   - PostgreSQL
   - Redis
   - gRPC
+  - TypeScript
   roles:
   - title: Инженер-программист
     start: 2021-01
-    end: 2022-07
+    end: 2022-11
     ongoing: false
   projects:
   - name: Nebula Graph Sync
@@ -247,10 +250,34 @@ experience:
       highlight: false
     links: {}
     contributions: []
+  - name: Nebula Community Site
+    type: volunteering
+    start: 2022-03
+    end: 2022-11
+    duration_months: 8
+    summary: Волонтёрский портал для документации и учебных материалов.
+    responsibilities:
+    - Организовал спринты по контенту и проводил триаж PR сообщества.
+    - Ввел систему тегов, повысившую обнаруживаемость.
+    skills:
+    - id: ts
+      name: TypeScript
+      level: intermediate
+      highlight: false
+    - id: redis
+      name: Redis
+      level: advanced
+      highlight: false
+    links: {}
+    contributions:
+    - repo: nixos/nixpkgs
+      link: https://github.com/NixOS/nixpkgs/pull/223344
+      note: Улучшения дериваций
 - employer: OpenAtlas
   location: null
   url: null
   role: Участник
+  type: volunteering
   start: 2019-03
   end: 2020-09
   duration_months: 18
@@ -347,7 +374,7 @@ interests:
 metrics:
   experience_years: 6
   companies: 3
-  projects: 4
+  projects: 5
 labels:
   summary: О себе
   highlights: Ключевые достижения

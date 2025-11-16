@@ -151,7 +151,13 @@
     {% set e_end = (e.end | fmt_ym(lang)) or (labels.present | default('present')) %}
     {% set period = e_start ~ ' -- ' ~ e_end %}
     {% if e.duration_months %}{% set period = period ~ ' (' ~ e.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}
-      \cventry{ {{- period -}} }{ {{- (e.role or '') | tex_escape -}} }{ {{- (e.employer or '') | tex_escape -}} }{ {{- (e.location or '') | tex_escape -}} }{}{
+      {# Employer name with optional (volunteering) #}
+      {% set employer_name_tex = (e.employer or '') | tex_escape %}
+      {% set employer_type_note = '' %}
+      {% if e.type and (e.type | lower) == 'volunteering' %}
+        {% set employer_type_note = ' (\\textit{' ~ (labels.get('employer_type_' ~ e.type) or e.type) ~ '})' %}
+      {% endif %}
+      \cventry{ {{- period -}} }{ {{- (e.role or '') | tex_escape -}} }{ {{- employer_name_tex -}} {{- employer_type_note -}} }{ {{- (e.location or '') | tex_escape -}} }{}{
         {% if e.keywords %}\footnotesize\emph{ {{- (e.keywords | map('tex_escape') | list) | join(', ') -}} }\normalsize\\[2pt]{% endif %}
       }
       \begin{adjustwidth}{\hintscolumnwidth+\separatorcolumnwidth}{0pt}
@@ -161,7 +167,7 @@
             {% set roles_sorted = (e.roles | sort(attribute='start') | reverse | list) %}
             {% set roles_prev = roles_sorted[1:] %}
             \vspace{-12pt} % FIXME remove these ugly indentation hacks.
-            \begin{itemize}[leftmargin=*, label=\labelitemii, itemsep=1pt, topsep=0pt, partopsep=0pt, parsep=0pt, after=\vspace{10pt}]
+            \begin{itemize}[leftmargin=*, label=\labelitemii, itemsep=1pt, topsep=0pt, partopsep=0pt, parsep=0pt, after=\vspace{14pt}]
               {% for r in roles_prev %}
                 \item \textbf{ {{- r.title | tex_escape -}} }
                 {%- set rs = (r.start | fmt_ym(lang)) if r.start else '' -%}
@@ -175,10 +181,11 @@
           {% endif %}
         {% endif %}
         {% if e.projects and e.projects|length > 0 %}
-          \begin{itemize}[leftmargin=*, itemsep=-8pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-6pt}]
+          \vspace{-4pt} % FIXME remove these ugly indentation hacks.
+          \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-6pt}, after=\vspace{0pt}]
           {% for pr in e.projects %}
             \item \textbf{ {{- (pr.name | default('Project')) | tex_escape -}} }
-            {% if pr.type %}
+            {% if pr.type and (pr.type | lower) == 'volunteering' and (not e.type or (e.type | lower) != 'volunteering') %}
               (\textit{ {{- labels.get('project_type_' ~ pr.type) | default(pr.type) -}} })
             {% endif %}%
             {% set pr_s = (pr.start | fmt_ym(lang)) or '?' %}
@@ -229,7 +236,7 @@
                   {% if c.note %} — {{ c.note }}{% endif %}
                   {% if not loop.last %}; {% endif %}
                 {% endfor %}
-              }\\
+              }
             {% endif %}
           {% endfor %}
         \end{itemize}

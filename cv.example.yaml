@@ -158,6 +158,26 @@ data:
       links: {}
       contributions: []
 
+    nebula-community-site:
+      name:
+        en: Nebula Community Site
+        ru: Nebula Community Site
+      employer: nebula
+      type: volunteering
+      start: "2022-03"
+      end: "2022-11"
+      summary:
+        en: Volunteer-driven portal for documentation and tutorials.
+        ru: Волонтёрский портал для документации и учебных материалов.
+      responsibilities:
+      - en: Organized content sprints and triaged community PRs.
+        ru: Организовал спринты по контенту и проводил триаж PR сообщества.
+      - en: Established tagging taxonomy improving discoverability.
+        ru: Ввел систему тегов, повысившую обнаруживаемость.
+      skills: [ts, redis]
+      links: {}
+      contributions: [flake]
+
     openatlas-maps:
       name:
         en: OpenAtlas Maps
