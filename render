@@ -5,23 +5,13 @@ import importlib
 import os
 import shutil
 import sys
-import zlib
 
 import click
-import xxhash
 import yaml
 
 import backend
-
-
-def compute_config_hash(name: str) -> str:
-    s = (name or '').encode('utf-8')
-    return xxhash.xxh32(s).hexdigest()
-
-
-def load_yaml(path: str) -> dict:
-    with open(path, 'r', encoding='utf-8') as f:
-        return yaml.safe_load(f) or {}
+from configuration import compute_config_hash, load_yaml, resolve_configuration
+ 
 
 
 @click.command(help='Render CV template')
@@ -40,7 +30,7 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         available = ', '.join(sorted(configs.keys()))
         raise click.UsageError(f'Configuration `{configuration}` not found. Available: {available}.')
 
-    build_settings = configs[configuration]
+    build_settings = resolve_configuration(configs, configuration)
 
     template = build_settings['template']
     dockerfile = build_settings['dockerfile']

@@ -1,14 +1,21 @@
 configurations:
-  sample:
-    basename: sample
+  pdflatex:
     template: moderncv.pdflatex.tex.j2
     dockerfile: backend/pdflatex.dockerfile
     backend: pdflatex
+
+  sample-env:
     environment:
       color: green
       style: classic
       linkcolor: black
       urlcolor: blue
+
+  sample:
+    basename: sample
+    inherits:
+    - pdflatex
+    - sample-env
 
 data:
   person:
