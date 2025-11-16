@@ -24,17 +24,72 @@ def load_yaml(path: str) -> Dict[str, Any]:
 def deep_merge_dicts(a: Dict[str, Any], b: Dict[str, Any]) -> Dict[str, Any]:
     """Deep-merge two dictionaries (a <- b).
 
-    - Nested dicts are merged recursively.
-    - Other value types (including lists) are overridden by b.
-    - Returns a new dict; inputs are not mutated.
+    Rules:
+    - Dict vs dict: recurse.
+    - List vs list: unique union preserving order (parent items first, then new child items not already present).
+    - Other types: override with b's value.
+    Inputs are not mutated.
     """
     out: Dict[str, Any] = copy.deepcopy(a) if isinstance(a, dict) else {}
     for k, v in (b or {}).items():
-        if k in out and isinstance(out[k], dict) and isinstance(v, dict):
-            out[k] = deep_merge_dicts(out[k], v)  # type: ignore[index]
+        av = out.get(k)
+        if isinstance(av, dict) and isinstance(v, dict):
+            out[k] = deep_merge_dicts(av, v)  # type: ignore[index]
+        elif isinstance(av, list) and isinstance(v, list):
+            out[k] = unique_union(av, v)
         else:
             out[k] = copy.deepcopy(v)
     return out
+
+
+def unique_union(parent: list[Any], child: list[Any]) -> list[Any]:
+    """Return ordered unique union of two lists (parent items first).
+
+    Behavior:
+    - Primitive items (str/int/float/bool/None): dedupe by value.
+    - Dict items: dedupe by a frozenset of their shallow key/value pairs; if duplicate dict appears, merge with deep_merge_dicts.
+    - Other objects: dedupe by id().
+    All items are deep-copied; dict duplicates are deep-merged.
+    """
+    merged_list: list[Any] = []
+    seen_map: dict[Any, Any] = {}
+
+    def _key(item: Any) -> Any:
+        if isinstance(item, (str, int, float, bool, type(None))):
+            return item
+        if isinstance(item, dict):
+            # Shallow signature; adequate for config structures.
+            try:
+                return ('dict', frozenset(item.items()))
+            except Exception:
+                return ('dict', id(item))
+        return ('obj', id(item))
+
+    def _add_or_merge(item: Any):
+        k = _key(item)
+        existing = seen_map.get(k)
+        if existing is None:
+            # Brand new.
+            seen_map[k] = copy.deepcopy(item)
+        else:
+            # Merge if both dicts; else keep existing (parent precedence).
+            if isinstance(existing, dict) and isinstance(item, dict):
+                seen_map[k] = deep_merge_dicts(existing, item)
+
+    for it in parent:
+        _add_or_merge(it)
+    for it in child:
+        _add_or_merge(it)
+
+    # Preserve parent-first order; we need to iterate original order again collecting by key.
+    emitted: set[Any] = set()
+    for it in parent + child:
+        k = _key(it)
+        if k in emitted:
+            continue
+        emitted.add(k)
+        merged_list.append(copy.deepcopy(seen_map[k]))
+    return merged_list
 
 
 def resolve_configuration(configs: Dict[str, Any], name: str, seen: Set[str] | None = None) -> Dict[str, Any]:
