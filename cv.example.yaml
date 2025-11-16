@@ -36,12 +36,11 @@ data:
     summary:
       en: Curious generalist building reliable systems with a taste for weird constraints.
       ru: Любопытный специалист, создающий надёжные системы и любящий нестандартные задачи.
-
-  highlights:
-  - en: Reduced cold-start latency for services by 47% using a staged prewarming pipeline.
-    ru: Снизил задержку холодного старта сервисов на 47% с помощью поэтапного разогрева.
-  - en: Consolidated 60+ jobs into a single DAG with clear SLAs and backpressure.
-    ru: Объединил 60+ заданий в единый DAG с понятными SLA и контролем нагрузки.
+    highlights:
+    - en: Reduced cold-start latency for services by 47% using a staged prewarming pipeline.
+      ru: Снизил задержку холодного старта сервисов на 47% с помощью поэтапного разогрева.
+    - en: Consolidated 60+ jobs into a single DAG with clear SLAs and backpressure.
+      ru: Объединил 60+ заданий в единый DAG с понятными SLA и контролем нагрузки.
 
   employers:
     acme:

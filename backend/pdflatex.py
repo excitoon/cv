@@ -78,7 +78,8 @@ class Renderer(backend.BaseRenderer):
             'summary': tr(p_raw.get('summary')),
         }
 
-        highlights = tr_list(raw.get('highlights'))
+        # Highlights: prefer nested under person for new schema; fallback to top-level for backward compatibility.
+        highlights = tr_list(p_raw.get('highlights') or raw.get('highlights'))
 
         # Skills.
         skills_raw = raw.get('skills') or {}
