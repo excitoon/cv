@@ -15,7 +15,7 @@ from configuration import compute_config_hash, load_yaml, resolve_configuration,
 
 @click.command(help='Render CV template')
 @click.option('--configuration', '-c', default='sample', show_default=True, help='Configuration name')
-@click.option('--yaml', '-y', 'yaml_path', default='~/cv.yaml', show_default=True, help='Input data file')
+@click.option('--yaml', '-y', 'yaml_path', default='cv.yaml', show_default=True, help='Input data file')
 @click.option('--language', '-l', default='en', show_default=True, help='Output language')
 @click.option('--out', '-o', 'out_dir', default='build/', show_default=True, help='Output directory')
 def main(configuration: str, yaml_path: str, language: str, out_dir: str):
