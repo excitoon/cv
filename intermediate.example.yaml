@@ -1,5 +1,5 @@
 version: 1
-generated_at: '2025-11-16'
+generated_at: '2025-11-17'
 lang: ru
 locale: ru_RU
 environment:
@@ -66,6 +66,14 @@ skills:
     years: 3.7
     first_used: 2019-03
     last_used: 2022-11
+  - id: mongodb
+    name: MongoDB
+    level: intermediate
+    highlight: false
+    months: 0
+    years: 0
+    first_used: null
+    last_used: null
 - group: Платформы/Инфраструктура
   items:
   - id: k8s
@@ -398,6 +406,7 @@ labels:
   interests: Интересы
   present: по н.в.
   skills_caption: Навыки
+  stack_caption: Стэк
   months_abbr: мес
   years_abbr: лет
   responsibilities: Обязанности

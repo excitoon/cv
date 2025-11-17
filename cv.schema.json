@@ -1,0 +1,262 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://example.com/cv.schema.json",
+  "title": "CV Data",
+  "type": "object",
+  "description": "Root CV YAML (or use { data: { ... } }).",
+  "properties": {
+    "data": { "$ref": "#/$defs/CvData" }
+  },
+  "allOf": [
+    {
+      "anyOf": [
+        { "required": ["data"] },
+        { "$ref": "#/$defs/CvData" }
+      ]
+    }
+  ],
+  "$defs": {
+    "LocalizedString": {
+      "description": "Either a string or a mapping language_code->string.",
+      "oneOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "additionalProperties": { "type": ["string", "number", "boolean", "null"] }
+        }
+      ]
+    },
+    "DateString": {
+      "description": "Date or ongoing token. Accepts YYYY, YYYY-MM, YYYY-MM-DD or ongoing tokens (now|present|current|ongoing).",
+      "type": "string",
+      "pattern": "^(\\d{4}(-\\d{2}(-\\d{2})?)?|now|present|current|ongoing)$"
+    },
+    "CvData": {
+      "type": "object",
+      "properties": {
+        "person": {
+          "type": "object",
+          "properties": {
+            "name": { "$ref": "#/$defs/LocalizedString" },
+            "title": { "$ref": "#/$defs/LocalizedString" },
+            "location": { "$ref": "#/$defs/LocalizedString" },
+            "contacts": { "type": "object", "additionalProperties": { "type": "string" } },
+            "summary": { "$ref": "#/$defs/LocalizedString" },
+            "highlights": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/LocalizedString" }
+            }
+          },
+          "additionalProperties": true
+        },
+        "highlights": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LocalizedString" },
+          "description": "Deprecated top-level; fallback if person.highlights absent."
+        },
+        "skills": {
+          "type": "object",
+          "properties": {
+            "registry": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "name": { "$ref": "#/$defs/LocalizedString" },
+                  "level": {
+                    "type": ["string", "number"],
+                    "description": "Free-form skill proficiency (e.g. beginner/intermediate/advanced/expert) or numeric scale. Not enforced by renderer."
+                  }
+                },
+                "additionalProperties": true
+              }
+            },
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": { "type": "string" },
+                  "name": { "$ref": "#/$defs/LocalizedString" },
+                  "skills": {
+                    "description": "Mapping of id -> skill meta (required).",
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "name": { "$ref": "#/$defs/LocalizedString" },
+                        "level": { "type": ["string", "number"] },
+                        "highlight": { "type": "boolean" }
+                      },
+                      "additionalProperties": true
+                    }
+                  },
+                  "items": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Legacy format if 'skills' absent."
+                  }
+                },
+                "additionalProperties": true
+              }
+            }
+          },
+          "additionalProperties": true
+        },
+        "languages": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "name": { "$ref": "#/$defs/LocalizedString" },
+              "level": {
+                "type": "string",
+                "description": "Language proficiency level. One of CEFR codes A1,A2,B1,B2,C1,C2 or 'native'. Renderer also passes through arbitrary strings, but these are the canonical set.",
+                "enum": ["native", "A1", "A2", "B1", "B2", "C1", "C2"]
+              }
+            },
+            "required": ["name"],
+            "additionalProperties": true
+          }
+        },
+        "contributions": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "repo": { "type": "string" },
+              "link": { "type": "string" },
+              "note": { "$ref": "#/$defs/LocalizedString" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "projects": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "employer": { "type": "string" },
+              "name": { "$ref": "#/$defs/LocalizedString" },
+              "type": { "type": "string", "enum": ["employment", "volunteering"], "description": "Project classification affecting volunteering tag display." },
+              "start": { "oneOf": [ { "$ref": "#/$defs/DateString" } ] },
+              "end": { "oneOf": [ { "$ref": "#/$defs/DateString" } ], "description": "Omit or use ongoing token for current project." },
+              "summary": { "$ref": "#/$defs/LocalizedString" },
+              "responsibilities": { "type": "array", "items": { "$ref": "#/$defs/LocalizedString" } },
+              "skills": { "type": "array", "items": { "type": "string" } },
+              "links": { "type": "object", "additionalProperties": { "type": "string" } },
+              "contributions": { "type": "array", "items": { "type": "string" } }
+            },
+            "required": ["employer"],
+            "additionalProperties": true
+          }
+        },
+        "employers": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "name": { "$ref": "#/$defs/LocalizedString" },
+              "location": { "$ref": "#/$defs/LocalizedString" },
+              "url": { "type": "string" },
+              "type": { "type": "string", "enum": ["employment", "volunteering"], "description": "Employer classification (volunteering propagates to display)." },
+              "roles": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "title": { "$ref": "#/$defs/LocalizedString" },
+                    "start": { "oneOf": [ { "$ref": "#/$defs/DateString" } ] },
+                    "end": { "oneOf": [ { "$ref": "#/$defs/DateString" } ] }
+                  },
+                  "required": ["title"],
+                  "additionalProperties": true
+                }
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "education": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "object",
+            "properties": {
+              "institution": { "$ref": "#/$defs/LocalizedString" },
+              "degree": { "$ref": "#/$defs/LocalizedString" },
+              "field": { "$ref": "#/$defs/LocalizedString" },
+              "start": { "oneOf": [ { "$ref": "#/$defs/DateString" }, { "type": "number", "description": "Year only." } ] },
+              "end": { "oneOf": [ { "$ref": "#/$defs/DateString" }, { "type": "number", "description": "Year only." } ] },
+              "location": { "$ref": "#/$defs/LocalizedString" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "classes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "$ref": "#/$defs/LocalizedString" },
+              "provider": { "$ref": "#/$defs/LocalizedString" },
+              "year": { "type": ["string", "number"] },
+              "link": { "type": "string" }
+            },
+            "additionalProperties": true
+          }
+        },
+        "recommendations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "$ref": "#/$defs/LocalizedString" },
+              "title": { "$ref": "#/$defs/LocalizedString" },
+              "relation": { "$ref": "#/$defs/LocalizedString" },
+              "text": { "$ref": "#/$defs/LocalizedString" },
+              "contact": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              }
+            },
+            "additionalProperties": true
+          }
+        },
+        "awards": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LocalizedString" }
+        },
+        "certifications": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "name": { "$ref": "#/$defs/LocalizedString" },
+                  "provider": { "$ref": "#/$defs/LocalizedString" },
+                  "year": { "type": ["string", "number"], "description": "Completion year; free-form string or numeric year." }
+                },
+                "additionalProperties": true
+              },
+              { "$ref": "#/$defs/LocalizedString" }
+            ]
+          }
+        },
+        "publications": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LocalizedString" }
+        },
+        "talks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LocalizedString" }
+        },
+        "interests": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/LocalizedString" }
+        }
+      },
+      "additionalProperties": true
+    }
+  }
+}

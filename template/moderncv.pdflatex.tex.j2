@@ -115,29 +115,19 @@
 {% if skills and skills|length > 0 %}
   \section*{ {{- labels.skills | default('Skills') -}} }
   {% for group in skills %}
-    {% set items_list = (group["items"] or []) %}
+    {% set items_list = (group['items'] or []) %}
     {% if items_list|length > 0 %}
-      {% set raw_label = (group["group"] or (group.get("name") or "")) %}
-      {% set label_tex = raw_label | tex_escape %}
-      {% set label = label_tex | replace('/', '/\\allowbreak{}') %}
+      {% set raw_label = group.group or group.get('name') or '' %}
+      {% set label = (raw_label | tex_escape) | replace('/', '/\\allowbreak{}') %}
       \cvitem{ \parbox[t]{\hintscolumnwidth}{\RaggedLeft {{ label -}} } }{
-        {% for s in items_list %}
-          {% if s.highlight %}
-            \textbf{ {{- s.name | tex_escape -}} }
-          {% else %}
-            {{ s.name | tex_escape }}
-          {% endif %}
-          {% if s.level or (s.months and s.months > 0) %}
-            \textit{(
-              {%- if s.level -%}
-                {{- (labels.get('skill_' ~ s.level) or s.level) -}}
-              {%- endif -%}
-              {% if s.level and (s.months and s.months > 0) -%}, {% endif %}
-              {% if s.months and s.months > 0 %}{{- s.months }} {{ labels.months_abbr | default('mo') -}}{% endif %}
-            {{- '' -}})}%
-          {% endif %}
-          {%- if not loop.last %}, {% endif %}
-        {% endfor %}
+        {%- for s in items_list -%}
+          {%- set parts = [] -%}
+          {%- if s.level %}{% set parts = parts + [(labels.get('skill_' ~ s.level) or s.level)] %}{% endif -%}
+          {%- if s.months and s.months > 0 %}{% set parts = parts + [s.months ~ ' ' ~ (labels.months_abbr | default('mo'))] %}{% endif -%}
+          {%- if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{%- else %}{{ s.name | tex_escape }}{%- endif -%}
+          {%- if parts|length > 0 %} \textit{({{ parts|join(', ') }})}{%- endif -%}
+          {%- if not loop.last %}, {% endif -%}
+        {%- endfor -%}
       }
     {% endif %}
   {% endfor %}
@@ -195,12 +185,15 @@
             — {\small {{ pr_period -}} }\\
             {% if pr.summary %}{{ pr.summary | tex_escape }}\\{% endif %}
             {% if pr.skills and pr.skills|length > 0 %}
-              {\small {{ labels.skills_caption | default('Skills') -}}:
-                {% for s in pr.skills %}
-                  {% if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{% else %}{{ s.name | tex_escape }}{% endif %}
-                  {% if not loop.last %}, {% endif %}
-                {% endfor %}
-              }\\
+              {\small {{ labels.stack_caption | default('Stack') -}}: {% for s in pr.skills -%}
+                {%- set parts = [] -%}
+                {#- Intentionally omit skill level for project skills -#}
+                {%- if s.months and s.months > 0 %}{% set parts = parts + [s.months ~ ' ' ~ (labels.months_abbr | default('mo'))] %}{% endif -%}
+                {%- if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{%- else %}{{ s.name | tex_escape }}{%- endif -%}
+                {%- if parts|length > 0 %} \textit{({{ parts|join(', ') }})}{%- endif -%}
+                {%- if not loop.last %}, {% endif -%}
+              {%- endfor -%}}
+              \\
             {% endif %}
             {% if pr.responsibilities and pr.responsibilities|length > 0 %}
               {{ labels.responsibilities | default('Responsibilities') -}}:

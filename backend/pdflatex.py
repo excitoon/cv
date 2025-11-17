@@ -104,25 +104,19 @@ class Renderer(backend.BaseRenderer):
             g_name_for_exclude = str(g.get('id') or g.get('name') or '').strip()
             if g_name_for_exclude and g_name_for_exclude in exclude_skill_groups:
                 continue
-            inline = g.get('skills') or []
-            for sdef in inline:
-                if isinstance(sdef, dict):
-                    sid = str(sdef.get('id') or (sdef.get('name') or '')).strip()
-                    if not sid:
+            inline = g.get('skills') or {}
+            # Mapping form only: { id: {name, level, highlight?}, ... }
+            if isinstance(inline, dict):
+                for sid_raw, sdef in (inline or {}).items():
+                    sid = str(sid_raw).strip()
+                    if not sid or sid in exclude_skills:
                         continue
-                    if sid in exclude_skills:
-                        continue
+                    sdef = sdef or {}
                     skill_index[sid] = {
                         'id': sid,
-                        'name': tr(sdef.get('name') or sid),
+                        'name': (tr(sdef.get('name')) if sdef.get('name') is not None else (skill_index.get(sid) or {}).get('name') or tr(sid)),
                         'level': sdef.get('level') or (skill_index.get(sid) or {}).get('level'),
                     }
-                else:
-                    sid = str(sdef)
-                    if sid and sid not in skill_index:
-                        if sid in exclude_skills:
-                            continue
-                        skill_index[sid] = {'id': sid, 'name': tr(sid), 'level': None}
 
         skills: list[dict] = []
         filtered_groups_raw = []
@@ -135,32 +129,23 @@ class Renderer(backend.BaseRenderer):
         for g in filtered_groups_raw:
             items_out: list[dict] = []
             if g.get('skills'):
-                # New format: group has inline skill objects or ids.
-                for sdef in (g.get('skills') or []):
-                    if isinstance(sdef, dict):
-                        sid = str(sdef.get('id') or (sdef.get('name') or '')).strip()
-                        if not sid:
-                            continue
-                        if sid in exclude_skills:
+                # Mapping from id -> meta is required.
+                inline = g.get('skills')
+                if isinstance(inline, dict):
+                    for sid_raw, sdef in (inline or {}).items():
+                        sid = str(sid_raw).strip()
+                        if not sid or sid in exclude_skills:
                             continue
                         meta = (skill_index.get(sid) or {})
+                        sdef = sdef or {}
                         items_out.append({
                             'id': sid,
                             'name': meta.get('name') or tr(sdef.get('name') or sid),
                             'level': sdef.get('level') or meta.get('level'),
                             'highlight': bool(sdef.get('highlight') or False),
                         })
-                    else:
-                        sid = str(sdef)
-                        if sid in exclude_skills:
-                            continue
-                        meta = (skill_index.get(sid) or {})
-                        items_out.append({
-                            'id': sid,
-                            'name': meta.get('name') or tr(sid),
-                            'level': meta.get('level'),
-                            'highlight': False,
-                        })
+                else:
+                    raise TypeError("skills groups must be a mapping of id -> meta; legacy array form is no longer supported")
             else:
                 # Backward-compatible format: references by ids in 'items'.
                 for sid in (g.get('items') or []):

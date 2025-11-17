@@ -64,6 +64,9 @@ present:
 skills_caption:
   en: Skills
   ru: Навыки
+stack_caption:
+  en: Stack
+  ru: Стэк
 months_abbr:
   en: mo
   ru: мес
