@@ -30,11 +30,8 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         merged_includes: dict = {}
         for pattern in include_patterns:
             for path in sorted(glob.glob(pattern)):
-                try:
-                    inc = load_yaml(path)
-                    merged_includes = deep_merge_dicts(merged_includes, inc)
-                except Exception as e:
-                    click.echo(f'Warning: failed to load include file {path}: {e}.', err=True)
+                inc = load_yaml(path)
+                merged_includes = deep_merge_dicts(merged_includes, inc)
         # Included content acts as a base; root overrides.
         data = deep_merge_dicts(merged_includes, data)
 
