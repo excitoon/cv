@@ -1,5 +1,5 @@
 version: 1
-generated_at: '2025-11-17'
+generated_at: '2025-11-19'
 lang: ru
 locale: ru_RU
 environment:
@@ -12,7 +12,7 @@ person:
   title: Системный специалист
   location: Гелиос-сити, Солярис
   contacts:
-    email: alex.falcon@example.com
+    references: Рекомендации
     phone: +1 555 000 1122
     github: https://github.com/afalcon
     linkedin: https://linkedin.com/in/afalcon
@@ -344,7 +344,7 @@ classes:
   provider: Внутренний
   year: 2023
   link: https://intra.example.com/reliability
-recommendations:
+references:
 - name: Дана Ортис
   title: Ведущий инженер
   relation: Наставник в Acme Orbits
@@ -390,7 +390,7 @@ labels:
   experience: Опыт
   education: Образование
   classes: Курсы
-  recommendations: Рекомендации
+  references: Рекомендации
   languages: Языки
   language_level_native: родной
   language_level_A1: начальный

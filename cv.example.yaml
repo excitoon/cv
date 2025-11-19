@@ -29,7 +29,7 @@ data:
       en: Helios City, Solaris
       ru: Гелиос-сити, Солярис
     contacts:
-      email: alex.falcon@example.com
+      references: Рекомендации
       phone: "+1 555 000 1122"
       github: https://github.com/afalcon
       linkedin: https://linkedin.com/in/afalcon
@@ -342,7 +342,7 @@ data:
           name: { en: gRPC, ru: gRPC }
           level: advanced
 
-  recommendations:
+  references:
   - name:
       en: Dana Ortiz
       ru: Дана Ортис

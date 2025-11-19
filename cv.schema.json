@@ -205,6 +205,24 @@
             "additionalProperties": true
           }
         },
+        "references": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": { "$ref": "#/$defs/LocalizedString" },
+              "title": { "$ref": "#/$defs/LocalizedString" },
+              "relation": { "$ref": "#/$defs/LocalizedString" },
+              "text": { "$ref": "#/$defs/LocalizedString" },
+              "contact": {
+                "type": "object",
+                "additionalProperties": { "type": "string" }
+              }
+            },
+            "additionalProperties": true
+          },
+          "description": "Professional references (formerly 'recommendations')."
+        },
         "recommendations": {
           "type": "array",
           "items": {
@@ -220,7 +238,9 @@
               }
             },
             "additionalProperties": true
-          }
+          },
+          "deprecated": true,
+          "description": "Deprecated: use 'references' instead."
         },
         "awards": {
           "type": "array",

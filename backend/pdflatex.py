@@ -435,15 +435,16 @@ class Renderer(backend.BaseRenderer):
         labels_in = getattr(self, 'labels', {}) or {}
         labels = {k: tr(v) for k, v in labels_in.items()}
 
-        # Recommendations (translate fields, keep contacts raw).
-        recommendations: list[dict] = []
-        for r in (raw.get('recommendations') or []):
-            recommendations.append({
-                'name': tr(r.get('name')),
-                'title': tr(r.get('title')),
-                'relation': tr(r.get('relation')),
-                'text': tr(r.get('text')),
-                'contact': dict(r.get('contact') or {}),
+        # References (renamed from recommendations). Accept either 'references' or legacy 'recommendations'.
+        references_raw = (raw.get('references') or raw.get('recommendations') or [])
+        references: list[dict] = []
+        for r in references_raw:
+            references.append({
+                'name': tr((r or {}).get('name')),
+                'title': tr((r or {}).get('title')),
+                'relation': tr((r or {}).get('relation')),
+                'text': tr((r or {}).get('text')),
+                'contact': dict((r or {}).get('contact') or {}),
             })
 
         # Annotate each skill item with usage data.
@@ -504,7 +505,7 @@ class Renderer(backend.BaseRenderer):
             'experience': experience,
             'education': education,
             'classes': classes,
-            'recommendations': recommendations,
+            'references': references,
             'awards': tr_list(raw.get('awards')),
             'certifications': certifications,
             'publications': tr_list(raw.get('publications')),

@@ -356,12 +356,12 @@
   }
 {% endif %}
 
-% Recommendations.
-{% if recommendations and recommendations|length > 0 %}
-  \section*{ {{- labels.recommendations | default('Recommendations') -}} }
+% References.
+{% if references and references|length > 0 %}
+  \section*{ {{- labels.references | default('References') -}} }
   \cvitem{}{
     \begin{itemize}[leftmargin=*, itemsep=4pt, topsep=0pt, partopsep=0pt, parsep=0pt, before=\vspace{-8pt}]
-      {% for r in recommendations %}
+      {% for r in references %}
         \item \textbf{ {{- r.name | tex_escape -}} }{% if r.title %}, {{ r.title | tex_escape }}{% endif %}{% if r.relation %} — {{ r.relation | tex_escape -}}{% endif %}.
         {% if r.text %}
           \newline
