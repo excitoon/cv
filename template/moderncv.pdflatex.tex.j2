@@ -181,9 +181,15 @@
             {% set pr_s = (pr.start | fmt_ym(lang)) or '?' %}
             {% set pr_e = (pr.end | fmt_ym(lang)) or (labels.present | default('present')) %}
             {% set pr_period = pr_s ~ ' -- ' ~ pr_e %}
-            {% if pr.duration_months %}{% set pr_period = pr_period ~ ' (' ~ pr.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}{% endif %}%
-            — {\small {{ pr_period -}} }\\
-            {% if pr.summary %}{{ pr.summary | tex_escape }}\\{% endif %}
+            {% if pr.duration_months %}
+              {% set pr_period = pr_period ~ ' (' ~ pr.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}
+            {% endif %}%
+            — {\small {{ pr_period -}} }
+            \par\noindent
+            {% if pr.summary %}
+              {{ pr.summary | tex_escape }}
+              \par\noindent
+            {% endif %}
             {% if pr.skills and pr.skills|length > 0 %}
               {\small {{ labels.stack_caption | default('Stack') -}}: {% for s in pr.skills -%}
                 {%- set parts = [] -%}
@@ -192,8 +198,8 @@
                 {%- if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{%- else %}{{ s.name | tex_escape }}{%- endif -%}
                 {%- if parts|length > 0 %} \textit{({{ parts|join(', ') }})}{%- endif -%}
                 {%- if not loop.last %}, {% endif -%}
-              {%- endfor -%}}
-              \\
+              {%- endfor -%}}.
+              \par\noindent
             {% endif %}
             {% if pr.responsibilities and pr.responsibilities|length > 0 %}
               {{ labels.responsibilities | default('Responsibilities') -}}:
@@ -216,7 +222,8 @@
                 {% for k, v in pr.links.items() %}
                   \href{ {{- v -}} }{ {{- k -}} }{% if not loop.last %}, {% endif %}
                 {% endfor %}
-              }\\
+              }
+              \par\noindent
             {% endif %}
             {% if pr.contributions and pr.contributions|length > 0 %}
               {\small {{ labels.contributions | default('Contributions') -}}:
