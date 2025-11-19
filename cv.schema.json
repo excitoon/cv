@@ -144,7 +144,17 @@
               "summary": { "$ref": "#/$defs/LocalizedString" },
               "responsibilities": { "type": "array", "items": { "$ref": "#/$defs/LocalizedString" } },
               "skills": { "type": "array", "items": { "type": "string" } },
-              "links": { "type": "object", "additionalProperties": { "type": "string" } },
+              "links": {
+                "type": "object",
+                "properties": {
+                  "example": { "type": "string", "format": "uri", "description": "Live demo or sample page for the project." },
+                  "repo": { "type": "string", "format": "uri", "description": "Source code repository URL." },
+                  "docs": { "type": "string", "format": "uri", "description": "Documentation site or page." },
+                  "site": { "type": "string", "format": "uri", "description": "Product or project website." }
+                },
+                "additionalProperties": { "type": "string", "format": "uri" },
+                "description": "Project links map. Recognized keys include: example, repo, docs, site. Other keys are allowed."
+              },
               "contributions": { "type": "array", "items": { "type": "string" } }
             },
             "required": ["employer"],

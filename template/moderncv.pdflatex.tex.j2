@@ -220,7 +220,8 @@
             {% if pr.links %}
               {\small {{ labels.links | default('Links') -}}:
                 {% for k, v in pr.links.items() %}
-                  \href{ {{- v -}} }{ {{- k -}} }{% if not loop.last %}, {% endif %}
+                  {% set lk = labels.get('link_type_' ~ k) or labels.get(k) or k %}
+                  \href{ {{- v -}} }{ {{- lk | tex_escape -}} }{% if not loop.last %}, {% else %}.{% endif %}
                 {% endfor %}
               }
               \par\noindent
@@ -234,7 +235,7 @@
                     {{ c.repo or 'repo' }}
                   {% endif %}
                   {% if c.note %} — {{ c.note }}{% endif %}
-                  {% if not loop.last %}; {% endif %}
+                  {% if not loop.last %}; {% else %}.{% endif %}
                 {% endfor %}
               }
             {% endif %}

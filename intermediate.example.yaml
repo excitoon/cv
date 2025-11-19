@@ -184,6 +184,8 @@ experience:
     links:
       repo: https://git.example.com/acme/pulse
       docs: https://docs.example.com/pulse
+      example: https://demo.example.com/pulse
+      site: https://pulse.example.com
     contributions:
     - repo: prom-community/awesome-exporters
       link: https://github.com/prom-community/awesome-exporters/pull/4242
@@ -320,7 +322,10 @@ experience:
       name: Kubernetes
       level: advanced
       highlight: false
-    links: {}
+    links:
+      repo: https://git.example.com/openatlas/maps
+      site: https://maps.openatlas.example.com
+      example: https://maps.openatlas.example.com/demo/tiles?z=4
     contributions: []
 education:
 - institution: Университет Соляриса
@@ -413,6 +418,10 @@ labels:
   impact: Влияние
   links: Ссылки
   contributions: Вклад
+  link_type_example: пример
+  link_type_repo: репозиторий
+  link_type_docs: документация
+  link_type_site: сайт
   contact: Контакты
   generated: Сгенерировано
   experience_caption: Опыт

@@ -85,6 +85,18 @@ links:
 contributions:
   en: Contributions
   ru: Вклад
+link_type_example:
+  en: example
+  ru: пример
+link_type_repo:
+  en: repository
+  ru: репозиторий
+link_type_docs:
+  en: documentation
+  ru: документация
+link_type_site:
+  en: site
+  ru: сайт
 contact:
   en: Contact
   ru: Контакты

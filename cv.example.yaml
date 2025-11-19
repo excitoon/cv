@@ -119,6 +119,8 @@ data:
       links:
         repo: https://git.example.com/acme/pulse
         docs: https://docs.example.com/pulse
+        example: https://demo.example.com/pulse
+        site: https://pulse.example.com
       contributions: [prom]
 
     orbitctl:
@@ -192,7 +194,10 @@ data:
       - en: Built tile cache and prerender queue.
         ru: Реализовал кэш тайлов и очередь пререндеринга.
       skills: [ts, redis, k8s]
-      links: {}
+      links:
+        repo: https://git.example.com/openatlas/maps
+        site: https://maps.openatlas.example.com
+        example: https://maps.openatlas.example.com/demo/tiles?z=4
       contributions: []
 
   contributions:
