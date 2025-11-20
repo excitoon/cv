@@ -1,5 +1,5 @@
 version: 1
-generated_at: '2025-11-19'
+generated_at: '2025-11-20'
 lang: ru
 locale: ru_RU
 environment:
@@ -439,11 +439,16 @@ labels:
   skill_sucks: слабый
   skill_rocks: отличный
   skill_zero: отсутствует
+  employer_type_employment: наёмная работа
+  employer_type_freelance: фриланс
+  employer_type_personal: личный
+  employer_type_open_source: open source
+  employer_type_volunteering: волонтёрство
   project_type_employment: наёмная работа
   project_type_freelance: фриланс
   project_type_personal: личный
   project_type_open_source: open source
-  project_type_volunteering: волонтёрство
+  project_type_volunteering: инициативная активность
   contact_type_email: e-mail
   contact_type_phone: телефон
   contact_type_website: сайт

@@ -150,6 +150,22 @@ skill_zero:
   en: zero
   ru: отсутствует
 
+employer_type_employment:
+  en: employment
+  ru: наёмная работа
+employer_type_freelance:
+  en: freelance
+  ru: фриланс
+employer_type_personal:
+  en: personal
+  ru: личный
+employer_type_open_source:
+  en: open source
+  ru: open source
+employer_type_volunteering:
+  en: volunteering
+  ru: волонтёрство
+
 project_type_employment:
   en: employment
   ru: наёмная работа
@@ -164,7 +180,7 @@ project_type_open_source:
   ru: open source
 project_type_volunteering:
   en: volunteering
-  ru: волонтёрство
+  ru: инициативная активность
 
 contact_type_email:
   en: e-mail
