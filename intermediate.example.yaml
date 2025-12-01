@@ -1,5 +1,5 @@
 version: 1
-generated_at: '2025-11-20'
+generated_at: '2025-12-01'
 lang: ru
 locale: ru_RU
 environment:
@@ -190,6 +190,8 @@ experience:
     - repo: prom-community/awesome-exporters
       link: https://github.com/prom-community/awesome-exporters/pull/4242
       note: Добавлены примеры конфигурации экспортера
+    references:
+    - dana
   - name: orbitctl
     type: employment
     start: 2022-08
@@ -213,6 +215,8 @@ experience:
       highlight: false
     links: {}
     contributions: []
+    references:
+    - dana
 - employer: Nebula Foundry
   location: Нео-Аркадия
   url: https://nebula.example.com
@@ -260,6 +264,8 @@ experience:
       highlight: false
     links: {}
     contributions: []
+    references:
+    - ilya
   - name: Nebula Community Site
     type: volunteering
     start: 2022-03
@@ -283,6 +289,8 @@ experience:
     - repo: nixos/nixpkgs
       link: https://github.com/NixOS/nixpkgs/pull/223344
       note: Улучшения дериваций
+    references:
+    - ilya
 - employer: OpenAtlas
   location: null
   url: null
@@ -327,6 +335,7 @@ experience:
       site: https://maps.openatlas.example.com
       example: https://maps.openatlas.example.com/demo/tiles?z=4
     contributions: []
+    references: []
 education:
 - institution: Университет Соляриса
   degree: Магистр
@@ -350,14 +359,16 @@ classes:
   year: 2023
   link: https://intra.example.com/reliability
 references:
-- name: Дана Ортис
+- id: dana
+  name: Дана Ортис
   title: Ведущий инженер
   relation: Наставник в Acme Orbits
   text: Стабильно выполнял задачи под давлением и повышал планку надёжности.
   contact:
     email: dana.ortiz@example.com
     linkedin: https://linkedin.com/in/dana-ortiz
-- name: Илья Серебров
+- id: ilya
+  name: Илья Серебров
   title: Руководитель SRE
   relation: Руководитель в Nebula Foundry
   text: Прагматичный инженер с высокой ответственностью и отличным взаимодействием.

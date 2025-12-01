@@ -81,6 +81,25 @@ class Renderer(backend.BaseRenderer):
         # Highlights: prefer nested under person for new schema; fallback to top-level for backward compatibility.
         highlights = tr_list(p_raw.get('highlights') or raw.get('highlights'))
 
+        # References registry. Prefer mapping id->object. Support legacy array (deprecated).
+        references_in = raw.get('references') if raw.get('references') is not None else (raw.get('recommendations') or {})
+        # Normalize to mapping: if array provided, items must include 'id'
+        references_map: dict[str, dict] = {}
+        if isinstance(references_in, dict):
+            for rid, robj in references_in.items():
+                references_map[str(rid)] = robj or {}
+        elif isinstance(references_in, list):
+            for item in references_in:
+                if not isinstance(item, dict):
+                    continue
+                rid = item.get('id') or item.get('name')
+                if not rid:
+                    # Skip items without id in legacy array.
+                    continue
+                references_map[str(rid)] = item or {}
+        else:
+            references_map = {}
+
         # Skills.
         skills_raw = raw.get('skills') or {}
         registry: dict[str, dict] = skills_raw.get('registry') or {}
@@ -224,6 +243,8 @@ class Renderer(backend.BaseRenderer):
                 'skills': _skill_items_from_ids(list(pr.get('skills') or [])),
                 'links': dict(pr.get('links') or {}),
                 'contributions': [],
+                # Project-level references: list of ids.
+                'references': [str(x) for x in (pr.get('references') or []) if x is not None],
             }
             # Accumulate skill usage for this project's skills.
             for sid in (pr.get('skills') or []):
@@ -245,6 +266,29 @@ class Renderer(backend.BaseRenderer):
                     'note': tr(meta.get('note')),
                 })
             by_employer.setdefault(emp_key, []).append(entry)
+
+        # Compute which references are actually referenced by visible projects.
+        referenced_ids: set[str] = set()
+        for ekey, plist in by_employer.items():
+            for p in plist:
+                # If project was excluded earlier it won't be in by_employer.
+                for rid in (p.get('references') or []):
+                    referenced_ids.add(str(rid))
+
+        # Build final references list: include only those referenced by at least one visible project.
+        references: list[dict] = []
+        for rid, robj in references_map.items():
+            if referenced_ids and (rid not in referenced_ids):
+                # Skip references not linked from any visible project.
+                continue
+            references.append({
+                'id': rid,
+                'name': tr((robj or {}).get('name')),
+                'title': tr((robj or {}).get('title')),
+                'relation': tr((robj or {}).get('relation')),
+                'text': tr((robj or {}).get('text')),
+                'contact': dict((robj or {}).get('contact') or {}),
+            })
 
         # Employers -> experience.
         employers_raw: dict[str, dict] = raw.get('employers') or {}
@@ -434,18 +478,6 @@ class Renderer(backend.BaseRenderer):
 
         labels_in = getattr(self, 'labels', {}) or {}
         labels = {k: tr(v) for k, v in labels_in.items()}
-
-        # References (renamed from recommendations). Accept either 'references' or legacy 'recommendations'.
-        references_raw = (raw.get('references') or raw.get('recommendations') or [])
-        references: list[dict] = []
-        for r in references_raw:
-            references.append({
-                'name': tr((r or {}).get('name')),
-                'title': tr((r or {}).get('title')),
-                'relation': tr((r or {}).get('relation')),
-                'text': tr((r or {}).get('text')),
-                'contact': dict((r or {}).get('contact') or {}),
-            })
 
         # Annotate each skill item with usage data.
         for g in skills:

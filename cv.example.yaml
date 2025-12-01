@@ -121,6 +121,7 @@ data:
         docs: https://docs.example.com/pulse
         example: https://demo.example.com/pulse
         site: https://pulse.example.com
+      references: [dana]
       contributions: [prom]
 
     orbitctl:
@@ -139,6 +140,7 @@ data:
         ru: Добавил герметичные сборки с помощью Nix flakes.
       skills: [nix, tf, k8s]
       links: {}
+      references: [dana]
       contributions: []
 
     nebula-graph:
@@ -157,6 +159,7 @@ data:
         ru: Спроектировал возобновляемый протокол с семантикой at-least-once.
       skills: [kotlin, postgres, redis, grpc]
       links: {}
+      references: [ilya]
       contributions: []
 
     nebula-community-site:
@@ -177,6 +180,7 @@ data:
         ru: Ввел систему тегов, повысившую обнаруживаемость.
       skills: [ts, redis]
       links: {}
+      references: [ilya]
       contributions: [flake]
 
     openatlas-maps:
@@ -348,35 +352,38 @@ data:
           level: advanced
 
   references:
-  - name:
-      en: Dana Ortiz
-      ru: Дана Ортис
-    title:
-      en: Staff Engineer
-      ru: Ведущий инженер
-    relation:
-      en: Mentor at Acme Orbits
-      ru: Наставник в Acme Orbits
-    text:
-      en: Consistently delivered under pressure and raised the bar for reliability.
-      ru: Стабильно выполнял задачи под давлением и повышал планку надёжности.
-    contact:
-      email: dana.ortiz@example.com
-      linkedin: https://linkedin.com/in/dana-ortiz
-  - name:
-      en: Ilya Serebrov
-      ru: Илья Серебров
-    title:
-      en: SRE Manager
-      ru: Руководитель SRE
-    relation:
-      en: Manager at Nebula Foundry
-      ru: Руководитель в Nebula Foundry
-    text:
-      en: Pragmatic engineer with strong ownership and great collaboration skills.
-      ru: Прагматичный инженер с высокой ответственностью и отличным взаимодействием.
-    contact:
-      email: ilya.serebrov@example.com
+    dana:
+      name:
+        en: Dana Ortiz
+        ru: Дана Ортис
+      title:
+        en: Staff Engineer
+        ru: Ведущий инженер
+      relation:
+        en: Mentor at Acme Orbits
+        ru: Наставник в Acme Orbits
+      text:
+        en: Consistently delivered under pressure and raised the bar for reliability.
+        ru: Стабильно выполнял задачи под давлением и повышал планку надёжности.
+      contact:
+        email: dana.ortiz@example.com
+        linkedin: https://linkedin.com/in/dana-ortiz
+
+    ilya:
+      name:
+        en: Ilya Serebrov
+        ru: Илья Серебров
+      title:
+        en: SRE Manager
+        ru: Руководитель SRE
+      relation:
+        en: Manager at Nebula Foundry
+        ru: Руководитель в Nebula Foundry
+      text:
+        en: Pragmatic engineer with strong ownership and great collaboration skills.
+        ru: Прагматичный инженер с высокой ответственностью и отличным взаимодействием.
+      contact:
+        email: ilya.serebrov@example.com
 
   awards:
   - en: Solar Hack 2022 winner

@@ -155,7 +155,8 @@
                 "additionalProperties": { "type": "string", "format": "uri" },
                 "description": "Project links map. Recognized keys include: example, repo, docs, site. Other keys are allowed."
               },
-              "contributions": { "type": "array", "items": { "type": "string" } }
+              "contributions": { "type": "array", "items": { "type": "string" } },
+              "references": { "type": "array", "items": { "type": "string" }, "description": "List of reference IDs from top-level 'references' registry." }
             },
             "required": ["employer"],
             "additionalProperties": true
@@ -216,8 +217,8 @@
           }
         },
         "references": {
-          "type": "array",
-          "items": {
+          "type": "object",
+          "additionalProperties": {
             "type": "object",
             "properties": {
               "name": { "$ref": "#/$defs/LocalizedString" },
@@ -231,26 +232,7 @@
             },
             "additionalProperties": true
           },
-          "description": "Professional references (formerly 'recommendations')."
-        },
-        "recommendations": {
-          "type": "array",
-          "items": {
-            "type": "object",
-            "properties": {
-              "name": { "$ref": "#/$defs/LocalizedString" },
-              "title": { "$ref": "#/$defs/LocalizedString" },
-              "relation": { "$ref": "#/$defs/LocalizedString" },
-              "text": { "$ref": "#/$defs/LocalizedString" },
-              "contact": {
-                "type": "object",
-                "additionalProperties": { "type": "string" }
-              }
-            },
-            "additionalProperties": true
-          },
-          "deprecated": true,
-          "description": "Deprecated: use 'references' instead."
+          "description": "Mapping of reference_id -> reference object. Reference IDs are used from projects.*.references."
         },
         "awards": {
           "type": "array",
