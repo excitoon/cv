@@ -580,8 +580,8 @@ class Renderer(backend.BaseRenderer):
 
         env = Environment(loader=FileSystemLoader(template_dir), autoescape=False, trim_blocks=True, lstrip_blocks=True)
 
-    # Add a filter to format dates into localized labels like "Oct 2025" (or "окт 2025").
-    # Month names are read from labels.months_short (a 12-item list localized to current language).
+        # Add a filter to format dates into localized labels like "Oct 2025" (or "окт 2025").
+        # Month names are read from labels.months_short (a 12-item list localized to current language).
         labels_data = (intermediate.get('labels') or {})
 
         def _fmt_ym_label(value: typing.Any, l: typing.Any) -> str:
@@ -634,7 +634,7 @@ class Renderer(backend.BaseRenderer):
             # Escape common LaTeX special chars: & % $ # _ { }
             s = re.sub(r'([&%$#_{}])', r'\\\1', s)
             # Handle ~ and ^ which are active characters in TeX text mode.
-            s = s.replace('~', r'\textasciitilde{}').replace('^', r'\textasciicircum{}')
+            s = s.replace('~', r'\ensuremath{\sim}').replace('^', r'\textasciicircum{}')
             return s
 
         env.filters['tex_escape'] = _tex_escape
