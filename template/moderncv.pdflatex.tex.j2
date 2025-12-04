@@ -122,8 +122,10 @@
       \cvitem{ \parbox[t]{\hintscolumnwidth}{\RaggedLeft {{ label -}} } }{
         {%- for s in items_list -%}
           {%- set parts = [] -%}
-          {%- if s.level %}{% set parts = parts + [(labels.get('skill_' ~ s.level) or s.level)] %}{% endif -%}
-          {%- if s.months and s.months > 0 %}{% set parts = parts + [s.months ~ ' ' ~ (labels.months_abbr | default('mo'))] %}{% endif -%}
+          {%- set hide_level = environment['hide-skill-level'] -%}
+          {%- set hide_duration = environment['hide-skill-duration'] -%}
+          {%- if (not hide_level) and s.level %}{% set parts = parts + [(labels.get('skill_' ~ s.level) or s.level)] %}{% endif -%}
+          {%- if (not hide_duration) and s.months and s.months > 0 %}{% set parts = parts + [s.months ~ ' ' ~ (labels.months_abbr | default('mo'))] %}{% endif -%}
           {%- if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{%- else %}{{ s.name | tex_escape }}{%- endif -%}
           {%- if parts|length > 0 %} \textit{({{ parts|join(', ') }})}{%- endif -%}
           {%- if not loop.last %}, {% endif -%}
@@ -193,11 +195,13 @@
             {% if pr.skills and pr.skills|length > 0 %}
               {\small {{ labels.stack_caption | default('Stack') -}}: {% for s in pr.skills -%}
                 {%- set parts = [] -%}
-                {#- Intentionally omit skill level for project skills -#}
-                {%- if s.months and s.months > 0 %}{% set parts = parts + [s.months ~ ' ' ~ (labels.months_abbr | default('mo'))] %}{% endif -%}
-                {%- if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{%- else %}{{ s.name | tex_escape }}{%- endif -%}
-                {%- if parts|length > 0 %} \textit{({{ parts|join(', ') }})}{%- endif -%}
-                {%- if not loop.last %}, {% endif -%}
+                  {% set hide_level = environment['hide-skill-level'] %}
+                  {% set hide_duration = environment['hide-skill-duration'] %}
+                  {% if (not hide_duration) and s.months and s.months > 0 %}{% set parts = parts + [s.months ~ ' ' ~ (labels.months_abbr | default('mo'))] %}{% endif %}
+                  {% if (not hide_level) and s.level %}{% set parts = parts + [(labels.get('skill_' ~ s.level) or s.level)] %}{% endif %}
+                  {%- if s.highlight %}\textbf{ {{- s.name | tex_escape -}} }{%- else %}{{ s.name | tex_escape }}{%- endif -%}
+                  {%- if parts|length > 0 %} \textit{({{ parts|join(', ') }})}{%- endif -%}
+                  {%- if not loop.last %}, {% endif -%}
               {%- endfor -%}}.
               \par\noindent
             {% endif %}
