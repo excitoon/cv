@@ -180,13 +180,18 @@
             {% if pr.type and (pr.type | lower) == 'volunteering' and (not e.type or (e.type | lower) != 'volunteering') %}
               (\textit{ {{- labels.get('project_type_' ~ pr.type) | default(pr.type) -}} })
             {% endif %}%
-            {% set pr_s = (pr.start | fmt_ym(lang)) or '?' %}
-            {% set pr_e = (pr.end | fmt_ym(lang)) or (labels.present | default('present')) %}
-            {% set pr_period = pr_s ~ ' -- ' ~ pr_e %}
-            {% if pr.duration_months %}
-              {% set pr_period = pr_period ~ ' (' ~ pr.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')' %}
-            {% endif %}%
-            — {\small {{ pr_period -}} }
+            {# Build project period only when we have any dates or duration. Avoid '? -- present' when omitted. #}
+            {% set pr_has_dates = (pr.start or pr.end) %}
+            {% set pr_has_dur = pr.duration_months %}
+            {% if pr_has_dates or pr_has_dur %}
+              {% set pr_s = (pr.start | fmt_ym(lang)) if pr.start else '' %}
+              {% set pr_e = (pr.end | fmt_ym(lang)) if pr.end else ((labels.present | default('present')) if (pr.start and (pr.end is none)) else '') %}
+              {% set pr_period = (pr_s ~ ' -- ' ~ pr_e) if (pr_s or pr_e) else '' %}
+              {% if pr_has_dur %}
+                {% set pr_period = (pr_period ~ ' (' ~ pr.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')') if pr_period else ('(' ~ pr.duration_months ~ ' ' ~ (labels.months_abbr | default('mo')) ~ ')') %}
+              {% endif %}
+              — {\small {{ pr_period -}} }
+            {% endif %}
             \par\noindent
             {% if pr.summary %}
               {{ pr.summary | tex_escape }}

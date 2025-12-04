@@ -29,7 +29,7 @@ skills:
     name: Rust
     level: advanced
     highlight: false
-    months: 21
+    months: 22
     years: 1.8
     first_used: 2023-02
     last_used: 2024-11
@@ -37,16 +37,16 @@ skills:
     name: Kotlin
     level: advanced
     highlight: false
-    months: 18
-    years: 1.5
+    months: 19
+    years: 1.6
     first_used: 2021-01
     last_used: 2022-07
   - id: ts
     name: TypeScript
     level: intermediate
     highlight: false
-    months: 26
-    years: 2.2
+    months: 28
+    years: 2.3
     first_used: 2019-03
     last_used: 2022-11
 - group: Данные/Хранилища
@@ -55,16 +55,16 @@ skills:
     name: PostgreSQL
     level: advanced
     highlight: false
-    months: 39
-    years: 3.2
+    months: 41
+    years: 3.4
     first_used: 2021-01
     last_used: 2024-11
   - id: redis
     name: Redis
     level: advanced
     highlight: false
-    months: 44
-    years: 3.7
+    months: 47
+    years: 3.9
     first_used: 2019-03
     last_used: 2022-11
   - id: mongodb
@@ -81,31 +81,31 @@ skills:
     name: Kubernetes
     level: advanced
     highlight: false
-    months: 23
-    years: 1.9
+    months: 25
+    years: 2.1
     first_used: 2019-03
     last_used: 2023-01
   - id: tf
     name: Terraform
     level: intermediate
     highlight: false
-    months: 5
-    years: 0.4
+    months: 6
+    years: 0.5
     first_used: 2022-08
     last_used: 2023-01
   - id: nix
     name: Nix
     level: intermediate
     highlight: false
-    months: 5
-    years: 0.4
+    months: 6
+    years: 0.5
     first_used: 2022-08
     last_used: 2023-01
   - id: prom
     name: Prometheus
     level: advanced
     highlight: false
-    months: 21
+    months: 22
     years: 1.8
     first_used: 2023-02
     last_used: 2024-11
@@ -113,8 +113,8 @@ skills:
     name: gRPC
     level: advanced
     highlight: false
-    months: 39
-    years: 3.2
+    months: 41
+    years: 3.4
     first_used: 2021-01
     last_used: 2024-11
 languages:
@@ -136,7 +136,7 @@ experience:
   type: employment
   start: 2022-08
   end: 2024-11
-  duration_months: 27
+  duration_months: 28
   keywords:
   - Rust
   - PostgreSQL
@@ -159,7 +159,7 @@ experience:
     type: employment
     start: 2023-02
     end: 2024-11
-    duration_months: 21
+    duration_months: 22
     summary: Высокоскоростной приём событий с адаптивной пакетизацией и идемпотентными
       приёмниками.
     responsibilities:
@@ -197,7 +197,7 @@ experience:
     type: employment
     start: 2022-08
     end: 2023-01
-    duration_months: 5
+    duration_months: 6
     summary: Единый CLI для развёртывания окружений и ротации секретов.
     responsibilities:
     - Добавил герметичные сборки с помощью Nix flakes.
@@ -225,7 +225,7 @@ experience:
   type: employment
   start: 2021-01
   end: 2022-11
-  duration_months: 22
+  duration_months: 23
   keywords:
   - Kotlin
   - PostgreSQL
@@ -242,7 +242,7 @@ experience:
     type: employment
     start: 2021-01
     end: 2022-07
-    duration_months: 18
+    duration_months: 19
     summary: Инкрементальный движок синхронизации для разнородных источников.
     responsibilities:
     - Спроектировал возобновляемый протокол с семантикой at-least-once.
@@ -271,7 +271,7 @@ experience:
     type: volunteering
     start: 2022-03
     end: 2022-11
-    duration_months: 8
+    duration_months: 9
     summary: Волонтёрский портал для документации и учебных материалов.
     responsibilities:
     - Организовал спринты по контенту и проводил триаж PR сообщества.
@@ -299,7 +299,7 @@ experience:
   type: volunteering
   start: 2019-03
   end: 2020-09
-  duration_months: 18
+  duration_months: 19
   keywords:
   - TypeScript
   - Redis
@@ -312,9 +312,9 @@ experience:
   projects:
   - name: OpenAtlas Maps
     type: volunteering
-    start: 2019-03
-    end: 2020-09
-    duration_months: 18
+    start: null
+    end: null
+    duration_months: null
     summary: Сообщественный туллинг для тайлинга карт и предпросмотра.
     responsibilities:
     - Реализовал кэш тайлов и очередь пререндеринга.

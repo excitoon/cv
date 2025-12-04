@@ -61,10 +61,21 @@ class Renderer(backend.BaseRenderer):
             return f'{d.year:04d}-{d.month:02d}' if d else None
 
         def _months_between(a: datetime.date | None, b: datetime.date | None) -> int | None:
+            """Ceiling month count.
+
+            - Returns None if either date is missing.
+            - If end is strictly before start (day-aware), returns 0.
+            - Base diff uses (year, month).
+            - Applies ceiling: add 1 month when end.day >= start.day, else no extra month.
+            """
             if not a or not b:
                 return None
-            months = (b.year - a.year) * 12 + (b.month - a.month)
-            return max(months - (1 if b.day < a.day else 0), 0)
+            if b < a:
+                return 0
+            diff = (b.year - a.year) * 12 + (b.month - a.month)
+            extra = 1 if b.day >= a.day else 0
+            months = diff + extra
+            return max(months, 0)
 
         environment = dict(getattr(self, 'environment', {}) or {})
 
@@ -311,6 +322,24 @@ class Renderer(backend.BaseRenderer):
                 emp_end = max(filtered) if filtered else None
                 end_for_duration = emp_end or today
 
+            # Employer duration in months for comparison with project durations.
+            emp_duration_months = _months_between(emp_start, end_for_duration)
+
+            # When project dates and duration match employer's, omit them on the project.
+            for p in projects:
+                try:
+                    p_start = _parse_date(p.get('start')) if p.get('start') else None
+                    p_end = _parse_date(p.get('end')) if p.get('end') else None
+                    same_start = (p_start == emp_start)
+                    same_end = (p_end == emp_end)
+                    if same_start and same_end:
+                        p['start'] = None
+                        p['end'] = None
+                        p['duration_months'] = None
+                except Exception:
+                    # Be resilient to unexpected types; leave values as-is if comparison fails.
+                    pass
+
             # Roles can change over time. Support "edge dates only":
             # users may specify only the start month for each role change; we infer the end
             # as the month before the next role's start, or the employer's end/present.
@@ -406,7 +435,7 @@ class Renderer(backend.BaseRenderer):
                 'type': emp_type,
                 'start': _fmt_ym(emp_start) if emp_start else None,
                 'end': _fmt_ym(emp_end) if emp_end else None,
-                'duration_months': _months_between(emp_start, end_for_duration),
+                'duration_months': emp_duration_months,
                 'keywords': keywords or None,
                 'roles': roles_out or None,
                 'projects': projects,
@@ -494,20 +523,21 @@ class Renderer(backend.BaseRenderer):
                 it['first_used'] = first_used
                 it['last_used'] = last_used
 
-        # Metrics
+        # Metrics.
         earliest_start: datetime.date | None = None
         latest_end_for_duration: datetime.date | None = None
         total_projects = 0
         for e in experience:
-            for p in (e.get('projects') or []):
-                total_projects += 1
-                ps = _parse_date(p.get('start'))
-                pe = _parse_date(p.get('end'))
-                if ps and (earliest_start is None or ps < earliest_start):
-                    earliest_start = ps
-                pe_span = pe or today
-                if pe_span and (latest_end_for_duration is None or pe_span > latest_end_for_duration):
-                    latest_end_for_duration = pe_span
+            # Count projects as before.
+            total_projects += len(e.get('projects') or [])
+            # Use employer-level start/end to avoid shifts when project dates are omitted.
+            es = _parse_date(e.get('start')) if e.get('start') else None
+            ee = _parse_date(e.get('end')) if e.get('end') else None
+            if es and (earliest_start is None or es < earliest_start):
+                earliest_start = es
+            ee_span = ee or today
+            if ee_span and (latest_end_for_duration is None or ee_span > latest_end_for_duration):
+                latest_end_for_duration = ee_span
         months_total = _months_between(earliest_start, latest_end_for_duration) or 0
         experience_years = max(int(round(months_total / 12.0)), 0)
 
