@@ -380,11 +380,21 @@
           {{ r.text | tex_escape }}
         {% endif %}
         {% if r.contact %}
-          \newline
-          \small {{ labels.contact | default('Contact') | tex_escape -}}:
+          {% set hide_phone = environment['hide-reference-contact-phone'] %}
+          {% set contact_items = [] %}
           {% for k, v in r.contact.items() %}
-            {{ (labels.get('contact_type_' ~ k) or labels.get(k) or k) | tex_escape }}: {{ v | tex_escape }}{%- if not loop.last %}, {% endif %}
+            {% if not (hide_phone and k == 'phone') %}
+              {% set _ = contact_items.append((k, v)) %}
+            {% endif %}
           {% endfor %}
+          {% if contact_items and contact_items|length > 0 %}
+            \newline
+            \small {{ labels.contact | default('Contact') | tex_escape -}}:
+            {% for item in contact_items %}
+              {% set k = item[0] %}{% set v = item[1] %}
+              {{ (labels.get('contact_type_' ~ k) or labels.get(k) or k) | tex_escape }}: {{ v | tex_escape }}{%- if not loop.last %}, {% endif %}
+            {% endfor %}
+          {% endif %}
         {% endif %}
       {% endfor %}
     \end{itemize}

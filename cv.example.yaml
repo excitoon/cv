@@ -10,6 +10,7 @@ configurations:
       style: classic
       linkcolor: black
       urlcolor: blue
+      hide-reference-contact-phone: true
 
   sample:
     basename: sample
@@ -368,6 +369,7 @@ data:
       contact:
         email: dana.ortiz@example.com
         linkedin: https://linkedin.com/in/dana-ortiz
+        phone: "+1 555 222 3344"
 
     ilya:
       name:
@@ -384,6 +386,7 @@ data:
         ru: Прагматичный инженер с высокой ответственностью и отличным взаимодействием.
       contact:
         email: ilya.serebrov@example.com
+        phone: "+1 555 333 4455"
 
   awards:
   - en: Solar Hack 2022 winner

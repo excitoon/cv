@@ -7,6 +7,7 @@ environment:
   style: classic
   linkcolor: black
   urlcolor: blue
+  hide-reference-contact-phone: true
 person:
   name: Алекс Фалкон
   title: Системный специалист
@@ -367,6 +368,7 @@ references:
   contact:
     email: dana.ortiz@example.com
     linkedin: https://linkedin.com/in/dana-ortiz
+    phone: +1 555 222 3344
 - id: ilya
   name: Илья Серебров
   title: Руководитель SRE
@@ -374,6 +376,7 @@ references:
   text: Прагматичный инженер с высокой ответственностью и отличным взаимодействием.
   contact:
     email: ilya.serebrov@example.com
+    phone: +1 555 333 4455
 awards:
 - Победитель хакатона Solar Hack 2022
 - Лауреат конкурса Infra Excellence 2023
