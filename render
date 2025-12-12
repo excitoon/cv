@@ -55,7 +55,7 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
     build_settings = resolve_configuration(configs, configuration)
 
     template = build_settings['template']
-    dockerfile = build_settings['dockerfile']
+    dockerfile = build_settings.get('dockerfile')
 
     # Resolve template & dockerfile paths with additional subdir fallbacks.
     def _resolve_with_candidates(original: str, extra_dirs: list[str]) -> str | None:
@@ -72,12 +72,16 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
                 return os.path.abspath(c)
         return None
 
-    template_path = _resolve_with_candidates(template, ['template', 'templates'])
-    dockerfile_path = _resolve_with_candidates(dockerfile, ['backend', 'docker', 'dockerfiles'])
+    template_path = _resolve_with_candidates(template, ['template'])
     if not template_path:
         raise click.UsageError(f'Template not found. Tried: {template}, script dir, and template subdirectories.')
-    if not dockerfile_path:
-        raise click.UsageError(f'Dockerfile not found. Tried: {dockerfile}, script dir, and backend/docker subdirectories.')
+
+    if dockerfile:
+        dockerfile_path = _resolve_with_candidates(dockerfile, ['backend'])
+        if not dockerfile_path:
+            raise click.UsageError(f'Dockerfile not found. Tried: {dockerfile}, script dir, and backend subdirectories.')
+    else:
+        dockerfile_path = None
 
     environment = build_settings['environment']
     basename = build_settings['basename']
@@ -110,6 +114,7 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         exclude_languages=exclude_languages,
         exclude_skills=exclude_skills,
         exclude_skill_groups=exclude_skill_groups,
+        root_dir=os.path.dirname(os.path.abspath(__file__)),
     )
 
     sample_mode = configuration == 'sample' and data['data']['person']['name']['en'] == 'Alex Falcon'

@@ -1,43 +1,23 @@
+import datetime
 import os
 import re
-import datetime
 import typing
+
 from jinja2 import Environment, FileSystemLoader
 
 import backend
 
 
 class Renderer(backend.BaseRenderer):
-    def render(self):
-        intermediate = self.expand_intermediate()
-
-        root_dir = getattr(self, 'root_dir', None) or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-        template_dir = os.path.join(root_dir, 'template')
+    def _render_impl(self, intermediate: dict) -> str:
+        template_dir = os.path.join(self.root_dir, 'template')
         template_file = os.path.join(template_dir, self.template)
         if not os.path.exists(template_file):
             raise FileNotFoundError(f'Template not found: {template_file}.')
 
-        out_dir = getattr(self, 'out_dir', os.path.join(root_dir, 'out'))
-        os.makedirs(out_dir, exist_ok=True)
-
-        def _slugify(s: str) -> str:
-            s = str(s)
-            return re.sub('-{2,}', '-', ''.join(ch.lower() if (ch.isalnum() and ch.isascii()) else '-' for ch in s)).strip('-') or 'cv'
-
-        basename = getattr(self, 'basename', None) or (intermediate.get('person') or {}).get('name') or 'cv'
-        base_slug = _slugify(basename)
-        cfg_hash = getattr(self, 'config_hash', None)
-        cfg_hash_short = (str(cfg_hash)[:8]) if cfg_hash else None
-        lang = getattr(self, 'language', None) or 'en'
-        lang_token = str(lang).replace('_', '-').split('-')[0].lower() or 'en'
-        today = datetime.date.today()
-        if cfg_hash_short:
-            stem = f'{base_slug}-{cfg_hash_short}-{lang_token}-{today.year:04d}-{today.month:02d}-{today.day:02d}'
-        else:
-            stem = f'{base_slug}-{lang_token}-{today.year:04d}-{today.month:02d}-{today.day:02d}'
-        output_pdf = os.path.join(out_dir, stem + '.pdf')
-        output_log = os.path.join(out_dir, stem + '.log')
-        output_tex = os.path.join(out_dir, stem + '.tex')
+        output_pdf = os.path.join(self.out_dir, self.stem + '.pdf')
+        output_log = os.path.join(self.out_dir, self.stem + '.log')
+        output_tex = os.path.join(self.out_dir, self.stem + '.tex')
 
         env = Environment(loader=FileSystemLoader(template_dir), autoescape=False, trim_blocks=True, lstrip_blocks=True)
 

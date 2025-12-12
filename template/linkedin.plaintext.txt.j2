@@ -1,0 +1,60 @@
+{{ person.name | default('') | text | trim }}
+{{ person.title | default('') | text | trim }}
+{{ person.location | default('') | text | trim }}
+{% if person.contacts %}
+{% for k,v in person.contacts.items() %}
+{{ k | capitalize }}: {{ v | text | trim }}
+{% endfor %}
+{% endif %}
+{{ '-' * 80 }}
+{% if person.summary %}
+
+{{ person.summary | text | trim }}
+{% endif %}
+{% if highlights %}
+{% for h in highlights %}- {{ h | text }}
+{% endfor %}
+{% endif %}
+
+{% if experience %}
+Experience:
+{% for e in experience %}
+{{ e.start | default('') }} – {{ e.end | default('') }}{% if e.duration_months %} ({{ e.duration_months }} mo){% endif %}: {{ e.employer | default('') }}
+{{ e.title | default('') }}
+{%- for pr in e.projects %}
+- {{ pr.name | text }}{% if pr.start or pr.end %} — {{ pr.start | default('?') }} – {{ pr.end | default('present') }}{% endif %}{% if pr.duration_months %} ({{ pr.duration_months }} mo){% endif %}
+
+  {% if pr.summary %}
+  {{ pr.summary | text }}
+  {% endif %}
+  {% if pr.skills %}
+  Stack: {{ pr.skills | map(attribute='name') | join(', ') }}
+  {% endif %}
+{% endfor %}
+{% if not loop.last %}
+
+{% endif %}
+{% endfor %}
+{% endif %}
+
+{% if skills %}
+Skills:
+{% for g in skills %}
+- {{ g.group | text }}: {{ (g['items'] | default([])) | map(attribute='name') | join(', ') }}
+{% endfor %}
+{% endif %}
+
+{% if references %}
+References:
+{% for r in references %}
+- {{ r.name | text }} — {{ r.title | default('') }}
+  {% if r.contact %}
+  {% for k,v in r.contact.items() %}
+  {{ k }}: {{ v }}
+  {% endfor %}
+  {% endif %}
+{% if not loop.last %}
+
+{% endif %}
+{% endfor %}
+{% endif %}

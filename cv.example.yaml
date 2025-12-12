@@ -4,6 +4,10 @@ configurations:
     dockerfile: backend/pdflatex.dockerfile
     backend: pdflatex
 
+  linkedin:
+    template: linkedin.plaintext.txt.j2
+    backend: plaintext
+
   sample-env:
     environment:
       color: green
@@ -11,11 +15,18 @@ configurations:
       linkcolor: black
       urlcolor: blue
       hide-reference-contact-phone: true
+      location: helios
 
   sample:
     basename: sample
     inherits:
     - pdflatex
+    - sample-env
+
+  sample-li:
+    basename: sample
+    inherits:
+    - linkedin
     - sample-env
 
 data:
@@ -26,12 +37,7 @@ data:
     title:
       en: Systems Generalist
       ru: Системный специалист
-    location:
-      en: Helios City, Solaris
-      ru: Гелиос-сити, Солярис
     contacts:
-      references: Рекомендации
-      phone: "+1 555 000 1122"
       github: https://github.com/afalcon
       linkedin: https://linkedin.com/in/afalcon
     summary:
@@ -42,6 +48,16 @@ data:
       ru: Снизил задержку холодного старта сервисов на 47% с помощью поэтапного разогрева.
     - en: Consolidated 60+ jobs into a single DAG with clear SLAs and backpressure.
       ru: Объединил 60+ заданий в единый DAG с понятными SLA и контролем нагрузки.
+
+  locations:
+    helios:
+      name:
+        en: Helios City
+        ru: Гелиос-сити
+      country:
+        en: Solaris
+        ru: Солярис
+      phone: "+1 555 111 2233"
 
   employers:
     acme:

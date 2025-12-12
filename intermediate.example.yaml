@@ -1,5 +1,5 @@
 version: 1
-generated_at: '2025-12-04'
+generated_at: '2025-12-12'
 lang: ru
 locale: ru_RU
 environment:
@@ -8,15 +8,15 @@ environment:
   linkcolor: black
   urlcolor: blue
   hide-reference-contact-phone: true
+  location: helios
 person:
   name: Алекс Фалкон
   title: Системный специалист
   location: Гелиос-сити, Солярис
   contacts:
-    references: Рекомендации
-    phone: +1 555 000 1122
     github: https://github.com/afalcon
     linkedin: https://linkedin.com/in/afalcon
+    phone: +1 555 111 2233
   summary: Любопытный специалист, создающий надёжные системы и любящий нестандартные
     задачи.
 highlights:

@@ -17,16 +17,16 @@ class BaseRenderer:
         language: str,
         template: str,
         dockerfile: str,
-        environment: dict | None,
+        environment: dict,
         out_dir: str,
-        configuration: str | None = None,
-        config_hash: str | None = None,
-        exclude_projects: typing.Iterable[str] | None = None,
-        exclude_education: typing.Iterable[str] | None = None,
-        exclude_languages: typing.Iterable[str] | None = None,
-        exclude_skills: typing.Iterable[str] | None = None,
-        exclude_skill_groups: typing.Iterable[str] | None = None,
-        root_dir: str | None = None,
+        configuration: str,
+        config_hash: str,
+        exclude_projects: typing.Iterable[str],
+        exclude_education: typing.Iterable[str],
+        exclude_languages: typing.Iterable[str],
+        exclude_skills: typing.Iterable[str],
+        exclude_skill_groups: typing.Iterable[str],
+        root_dir: str,
     ):
         self.data = data or {}
         self.labels = labels or {}
@@ -116,13 +116,34 @@ class BaseRenderer:
 
         environment = dict(getattr(self, 'environment', {}) or {})
 
-        # Person.
+        # Person: derive name/title/summary from data.person; derive location and phone strictly from environment.location via data.locations.
         p_raw = raw.get('person') or {}
+        locations_map: dict[str, dict] = raw.get('locations') or {}
+        env_location_key: str | None = (environment.get('location') if isinstance(environment, dict) else None)
+        loc_obj: dict | None = (locations_map.get(str(env_location_key)) if env_location_key else None)
+
+        # Compose localized location string strictly from locations registry; no fallback to person.location.
+        if loc_obj:
+            loc_name = tr(loc_obj.get('name'))
+            loc_country = tr(loc_obj.get('country'))
+            composed_location = (f"{loc_name}, {loc_country}" if (loc_name and loc_country) else (loc_name or loc_country))
+        else:
+            composed_location = None
+
+        # Contacts: start from person.contacts excluding phone; phone is taken only from locations registry.
+        contacts_in = dict(p_raw.get('contacts') or {})
+        # Remove any user-provided phone from person.contacts to avoid legacy fallback.
+        if 'phone' in contacts_in:
+            contacts_in.pop('phone', None)
+        # Inject phone from locations registry if available.
+        if loc_obj and isinstance(loc_obj.get('phone'), (str, int)):
+            contacts_in['phone'] = str(loc_obj.get('phone'))
+
         person = {
             'name': tr(p_raw.get('name')),
             'title': tr(p_raw.get('title')),
-            'location': tr(p_raw.get('location')),
-            'contacts': dict(p_raw.get('contacts') or {}),
+            'location': composed_location,
+            'contacts': contacts_in,
             'summary': tr(p_raw.get('summary')),
         }
 
@@ -615,6 +636,24 @@ class BaseRenderer:
         }
 
     def render(self) -> str:
+        os.makedirs(self.out_dir, exist_ok=True)
+        intermediate = self.expand_intermediate()
+        return self._render_impl(intermediate)
+
+    @staticmethod
+    def _slugify(s: str) -> str:
+        s = str(s)
+        return re.sub('-{2,}', '-', ''.join(ch.lower() if (ch.isalnum() and ch.isascii()) else '-' for ch in s)).strip('-') or 'cv'
+
+    @property
+    def stem(self) -> str:
+        base_slug = self._slugify(self.basename)
+        cfg_hash_short = self.config_hash[:8]
+        lang_token = str(self.language).replace('_', '-').split('-')[0].lower() or 'en'
+        today = datetime.date.today()
+        return f'{base_slug}-{cfg_hash_short}-{lang_token}-{today.year:04d}-{today.month:02d}-{today.day:02d}'
+
+    def _render_impl(self, intermediate: dict) -> str:
         raise NotImplementedError('Subclasses should implement this method.')
 
     def run_in_docker(
