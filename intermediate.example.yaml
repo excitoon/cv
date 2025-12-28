@@ -1,5 +1,5 @@
 version: 1
-generated_at: '2025-12-12'
+generated_at: '2025-12-28'
 lang: ru
 locale: ru_RU
 environment:
@@ -16,6 +16,7 @@ person:
   contacts:
     github: https://github.com/afalcon
     linkedin: https://linkedin.com/in/afalcon
+    telegram: https://t.me/afalcon
     phone: +1 555 111 2233
   summary: Любопытный специалист, создающий надёжные системы и любящий нестандартные
     задачи.
