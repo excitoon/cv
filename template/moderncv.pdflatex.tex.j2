@@ -60,6 +60,11 @@
   \address{ {{- p.location -}} }{}{}
 {% endif %}
 
+% Photo.
+{% if p.photo %}
+  \photo[72pt]{ {{- p.photo -}} }
+{% endif %}
+
 % Use moderncv contact macros (no custom \extrainfo links)
 {% if p.contacts %}
   {% if p.contacts.email %}

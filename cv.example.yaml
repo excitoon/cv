@@ -41,6 +41,7 @@ data:
       github: https://github.com/afalcon
       linkedin: https://linkedin.com/in/afalcon
       telegram: https://t.me/afalcon
+    photo: photo.example.jpg
     summary:
       en: Curious generalist building reliable systems with a taste for weird constraints.
       ru: Любопытный специалист, создающий надёжные системы и любящий нестандартные задачи.

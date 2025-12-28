@@ -145,6 +145,7 @@ class BaseRenderer:
             'location': composed_location,
             'contacts': contacts_in,
             'summary': tr(p_raw.get('summary')),
+            'photo': p_raw.get('photo'),
         }
 
         # Highlights: prefer nested under person for new schema; fallback to top-level for backward compatibility.

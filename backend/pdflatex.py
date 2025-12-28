@@ -98,6 +98,29 @@ class Renderer(backend.BaseRenderer):
                 with open(full, 'rb') as f:
                     files[rel] = f.read()
 
+        # Include photo file if specified so LaTeX can find it in the container.
+        try:
+            p = (intermediate.get('person') or {})
+            photo_ref = p.get('photo')
+            if isinstance(photo_ref, str) and photo_ref.strip():
+                photo_rel = photo_ref.strip()
+                # Resolve candidate locations: absolute path, root_dir, template_dir.
+                candidates = []
+                if os.path.isabs(photo_rel):
+                    candidates.append(photo_rel)
+                else:
+                    candidates.append(os.path.join(self.root_dir, photo_rel))
+                    candidates.append(os.path.join(template_dir, photo_rel))
+                photo_path = next((c for c in candidates if os.path.exists(c)), None)
+                if photo_path:
+                    # Key should match the LaTeX path used in \photo{...}
+                    key = photo_rel
+                    with open(photo_path, 'rb') as f:
+                        files[key] = f.read()
+        except Exception:
+            # Non-fatal: if photo cannot be bundled, LaTeX may warn; build continues depending on template.
+            pass
+
         shell_script = (
             'set -u; status=0; : > build.log; '
             '{ echo "== env =="; pwd; ls -la; which pdflatex || true; pdflatex --version || true; } >> build.log 2>&1; '
@@ -182,6 +205,6 @@ class Renderer(backend.BaseRenderer):
                 tail = '\n\n--- build.log (tail) ---\n' + '\n'.join(txt[-60:]) + '\n--- end ---'
             except Exception:
                 pass
-            raise RuntimeError(f'pdflatex failed (exit {exit_code}). See {os.path.basename(output_log)} in {out_dir}{tail}')
+            raise RuntimeError(f'pdflatex failed (exit {exit_code}). See {os.path.basename(output_log)} in {self.out_dir}{tail}')
 
         return output_pdf
