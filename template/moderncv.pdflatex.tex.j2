@@ -154,7 +154,8 @@
       {% if e.type and (e.type | lower) == 'volunteering' %}
         {% set employer_type_note = ' (\\textit{' ~ (labels.get('employer_type_' ~ e.type) or e.type) ~ '})' %}
       {% endif %}
-      \cventry{ {{- period -}} }{ {{- (e.role or '') | tex_escape -}} }{ {{- employer_name_tex -}} {{- employer_type_note -}} }{ {{- (e.location or '') | tex_escape -}} }{}{
+      {% set shown_location = ((e.location or '') if environment['hide-employer-location'] else (e.employer_location or '')) %}
+      \cventry{ {{- period -}} }{ {{- (e.role or '') | tex_escape -}} }{ {{- employer_name_tex -}} {{- employer_type_note -}} }{ {{- shown_location | tex_escape -}} }{}{
         {% if e.keywords %}\footnotesize\emph{ {{- (e.keywords | map('tex_escape') | list) | join(', ') -}} }\normalsize\\[2pt]{% endif %}
       }
       \begin{adjustwidth}{\hintscolumnwidth+\separatorcolumnwidth}{0pt}

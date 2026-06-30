@@ -437,7 +437,8 @@ class BaseRenderer:
                     continue
                 sd = _parse_date(r.get('start')) if (isinstance(r, dict) and 'start' in r) else None
                 ed = _parse_date(r.get('end')) if (isinstance(r, dict) and 'end' in r) else None
-                roles_seq.append({'idx': idx, 'title': rt, 'start_d': sd, 'end_d': ed})
+                rl = tr(r.get('location')) if isinstance(r, dict) else None
+                roles_seq.append({'idx': idx, 'title': rt, 'location': rl, 'start_d': sd, 'end_d': ed})
 
             def _prev_month(d: datetime.date) -> datetime.date:
                 y = d.year
@@ -485,6 +486,7 @@ class BaseRenderer:
                 ongoing_role = (end_d is None)
                 roles_out.append({
                     'title': r['title'],
+                    'location': r.get('location'),
                     'start': _fmt_ym(start_d) if start_d else None,
                     'end': _fmt_ym(end_d) if end_d else None,
                     'ongoing': ongoing_role,
@@ -492,6 +494,7 @@ class BaseRenderer:
 
             # Choose representative role: the latest by start date (fallback: last listed)
             role_title = None
+            role_location = None
             if roles_out:
                 latest = None
                 for r in roles_out:
@@ -503,6 +506,7 @@ class BaseRenderer:
                         if sd and (prev_sd is None or sd > prev_sd):
                             latest = (sd, r)
                 role_title = (latest[1]['title'] if latest else roles_out[-1]['title'])
+                role_location = (latest[1].get('location') if latest else roles_out[-1].get('location'))
 
             keywords: list[str] = []
             for p in projects:
@@ -514,7 +518,8 @@ class BaseRenderer:
             emp_type = str(emp.get('type', 'employment')).lower() if emp.get('type') else 'employment'
             experience.append({
                 'employer': tr(emp.get('name')),
-                'location': tr(emp.get('location')),
+                'location': role_location,
+                'employer_location': tr(emp.get('location')),
                 'url': emp.get('url'),
                 'role': role_title,
                 'type': emp_type,
