@@ -96,6 +96,8 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str, verbos
     exclude_languages = build_settings.get('exclude-languages') or build_settings.get('exclude_languages') or []
     exclude_skills = build_settings.get('exclude-skills') or build_settings.get('exclude_skills') or []
     exclude_skill_groups = build_settings.get('exclude-skill-groups') or build_settings.get('exclude_skill_groups') or []
+    # Optional: list of employer IDs to exclude (mirrors exclude-projects).
+    exclude_employers = build_settings.get('exclude-employers') or build_settings.get('exclude_employers') or []
 
     backend_mod = importlib.import_module(f"backend.{build_settings['backend']}")
     Renderer = getattr(backend_mod, 'Renderer')
@@ -117,6 +119,7 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str, verbos
         exclude_languages=exclude_languages,
         exclude_skills=exclude_skills,
         exclude_skill_groups=exclude_skill_groups,
+        exclude_employers=exclude_employers,
         root_dir=os.path.dirname(os.path.abspath(__file__)),
         verbosity=effective_verbosity,
     )

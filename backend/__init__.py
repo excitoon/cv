@@ -28,6 +28,7 @@ class BaseRenderer:
         exclude_skill_groups: typing.Iterable[str],
         root_dir: str,
         verbosity: str = 'full',
+        exclude_employers: typing.Iterable[str] = (),
     ):
         self.data = data or {}
         self.labels = labels or {}
@@ -46,6 +47,7 @@ class BaseRenderer:
         self.exclude_skill_groups = [str(x) for x in (exclude_skill_groups or [])]
         self.root_dir = root_dir
         self.verbosity = (verbosity or 'full')
+        self.exclude_employers = [str(x) for x in (exclude_employers or [])]
 
     def expand_intermediate(self) -> dict:
         # See example of intermediate format in `intermediate.example.yaml`. No schema, womp-womp.
@@ -388,8 +390,11 @@ class BaseRenderer:
 
         # Employers -> experience.
         employers_raw: dict[str, dict] = raw.get('employers') or {}
+        exclude_employers: set[str] = set([str(x) for x in (getattr(self, 'exclude_employers', []) or [])])
         experience: list[dict] = []
         for ekey, emp in employers_raw.items():
+            if str(ekey) in exclude_employers:
+                continue
             projects = by_employer.get(ekey, [])
             if not projects:
                 continue
