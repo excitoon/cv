@@ -126,14 +126,26 @@ data:
       type: employment
       start: "2023-02"
       end: "2024-11"
+      # `summary` and `responsibilities` may optionally be split into verbosity levels
+      # (short/full). The renderer selects one via `-v <level>` or `environment.verbosity`,
+      # falling back to `full`. A plain LocalizedString / list (as the other projects use)
+      # stays valid and behaves as if present at every level.
       summary:
-        en: High-rate event ingestion with adaptive batching and idempotent sinks.
-        ru: Высокоскоростной приём событий с адаптивной пакетизацией и идемпотентными приёмниками.
+        short:
+          en: High-rate event ingestion.
+          ru: Высокоскоростной приём событий.
+        full:
+          en: High-rate event ingestion with adaptive batching and idempotent sinks.
+          ru: Высокоскоростной приём событий с адаптивной пакетизацией и идемпотентными приёмниками.
       responsibilities:
-      - en: Implemented backpressure-aware gRPC producers.
-        ru: Реализовал gRPC-продюсеры с учётом обратного давления.
-      - en: Tuned Postgres partitioning for 2B rows/month.
-        ru: Настроил партиционирование Postgres для 2 млрд строк/месяц.
+        short:
+        - en: Tuned Postgres partitioning for 2B rows/month.
+          ru: Настроил партиционирование Postgres для 2 млрд строк/месяц.
+        full:
+        - en: Implemented backpressure-aware gRPC producers.
+          ru: Реализовал gRPC-продюсеры с учётом обратного давления.
+        - en: Tuned Postgres partitioning for 2B rows/month.
+          ru: Настроил партиционирование Postgres для 2 млрд строк/месяц.
       skills: [rust, postgres, grpc, prom]
       links:
         repo: https://git.example.com/acme/pulse

@@ -27,6 +27,7 @@ class BaseRenderer:
         exclude_skills: typing.Iterable[str],
         exclude_skill_groups: typing.Iterable[str],
         root_dir: str,
+        verbosity: str = 'full',
     ):
         self.data = data or {}
         self.labels = labels or {}
@@ -44,6 +45,7 @@ class BaseRenderer:
         self.exclude_skills = [str(x) for x in (exclude_skills or [])]
         self.exclude_skill_groups = [str(x) for x in (exclude_skill_groups or [])]
         self.root_dir = root_dir
+        self.verbosity = (verbosity or 'full')
 
     def expand_intermediate(self) -> dict:
         # See example of intermediate format in `intermediate.example.yaml`. No schema, womp-womp.
@@ -77,6 +79,30 @@ class BaseRenderer:
 
         def tr_list(items: typing.Any) -> list[str]:
             return [str(tr(x)) for x in (items or [])]
+
+        # Verbosity axis: like language, all levels are carried in the data and one is
+        # selected at build time (from `-v` / `environment.verbosity`). Resolved BEFORE
+        # `tr()`, so the template is unaffected — it still receives a plain string / list.
+        level = str(getattr(self, 'verbosity', 'full') or 'full').strip().lower()
+        VERBOSITY_LEVELS = ('short', 'full')
+
+        def pick_level(v: typing.Any) -> typing.Any:
+            """Select a verbosity level from a field that may carry named levels.
+
+            If `v` is a mapping that contains any known level key (short/full), return the
+            requested level with fallback (requested -> full -> short -> first present).
+            Plain values (string, {lang: ...}, or list) pass through unchanged, so the bare
+            LocalizedString / list forms stay valid — migration can be incremental.
+            """
+            if isinstance(v, dict) and any(k in v for k in VERBOSITY_LEVELS):
+                if level in v:
+                    return v[level]
+                if 'full' in v:
+                    return v['full']
+                if 'short' in v:
+                    return v['short']
+                return next(iter(v.values()), None)
+            return v
 
         def _parse_date(s: typing.Any) -> datetime.date | None:
             if s is None:
@@ -144,7 +170,7 @@ class BaseRenderer:
             'title': tr(p_raw.get('title')),
             'location': composed_location,
             'contacts': contacts_in,
-            'summary': tr(p_raw.get('summary')),
+            'summary': tr(pick_level(p_raw.get('summary'))),
             'photo': p_raw.get('photo'),
         }
 
@@ -308,8 +334,8 @@ class BaseRenderer:
                 'start': _fmt_ym(ps) if ps else None,
                 'end': None if ongoing else _fmt_ym(pe_raw),
                 'duration_months': _months_between(ps, pe_for_duration),
-                'summary': tr(pr.get('summary')),
-                'responsibilities': tr_list(pr.get('responsibilities')),
+                'summary': tr(pick_level(pr.get('summary'))),
+                'responsibilities': tr_list(pick_level(pr.get('responsibilities'))),
                 'skills': _skill_items_from_ids(list(pr.get('skills') or [])),
                 'links': dict(pr.get('links') or {}),
                 'contributions': [],

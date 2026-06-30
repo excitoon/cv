@@ -26,6 +26,36 @@
         }
       ]
     },
+    "LeveledString": {
+      "description": "A LocalizedString, optionally split into verbosity levels (short/full). The renderer selects one level via -v / environment.verbosity, falling back to full.",
+      "oneOf": [
+        { "$ref": "#/$defs/LocalizedString" },
+        {
+          "type": "object",
+          "properties": {
+            "short": { "$ref": "#/$defs/LocalizedString" },
+            "full": { "$ref": "#/$defs/LocalizedString" }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
+        }
+      ]
+    },
+    "LeveledResponsibilities": {
+      "description": "A list of LocalizedString, optionally split into verbosity levels (short/full).",
+      "oneOf": [
+        { "type": "array", "items": { "$ref": "#/$defs/LocalizedString" } },
+        {
+          "type": "object",
+          "properties": {
+            "short": { "type": "array", "items": { "$ref": "#/$defs/LocalizedString" } },
+            "full": { "type": "array", "items": { "$ref": "#/$defs/LocalizedString" } }
+          },
+          "additionalProperties": false,
+          "minProperties": 1
+        }
+      ]
+    },
     "DateString": {
       "description": "Date or ongoing token. Accepts YYYY, YYYY-MM, YYYY-MM-DD or ongoing tokens (now|present|current|ongoing).",
       "type": "string",
@@ -41,7 +71,7 @@
             "title": { "$ref": "#/$defs/LocalizedString" },
             "location": { "$ref": "#/$defs/LocalizedString" },
             "contacts": { "type": "object", "additionalProperties": { "type": "string" } },
-            "summary": { "$ref": "#/$defs/LocalizedString" },
+            "summary": { "$ref": "#/$defs/LeveledString" },
             "highlights": {
               "type": "array",
               "items": { "$ref": "#/$defs/LocalizedString" }
@@ -141,8 +171,8 @@
               "type": { "type": "string", "enum": ["employment", "volunteering"], "description": "Project classification affecting volunteering tag display." },
               "start": { "oneOf": [ { "$ref": "#/$defs/DateString" } ] },
               "end": { "oneOf": [ { "$ref": "#/$defs/DateString" } ], "description": "Omit or use ongoing token for current project." },
-              "summary": { "$ref": "#/$defs/LocalizedString" },
-              "responsibilities": { "type": "array", "items": { "$ref": "#/$defs/LocalizedString" } },
+              "summary": { "$ref": "#/$defs/LeveledString" },
+              "responsibilities": { "$ref": "#/$defs/LeveledResponsibilities" },
               "skills": { "type": "array", "items": { "type": "string" } },
               "links": {
                 "type": "object",

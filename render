@@ -18,7 +18,8 @@ from configuration import compute_config_hash, load_yaml, resolve_configuration,
 @click.option('--yaml', '-y', 'yaml_path', default='cv.yaml', show_default=True, help='Input data file')
 @click.option('--language', '-l', default='en', show_default=True, help='Output language')
 @click.option('--out', '-o', 'out_dir', default='build/', show_default=True, help='Output directory')
-def main(configuration: str, yaml_path: str, language: str, out_dir: str):
+@click.option('--verbosity', '-v', default=None, help='Verbosity level (e.g. short, full). Overrides environment.verbosity; defaults to full.')
+def main(configuration: str, yaml_path: str, language: str, out_dir: str, verbosity: str | None):
     os.makedirs(out_dir, exist_ok=True)
 
     root_path = os.path.expanduser(yaml_path)
@@ -85,6 +86,8 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
 
     environment = build_settings['environment']
     basename = build_settings['basename']
+    # Verbosity selector: CLI flag wins, else profile's environment.verbosity, else 'full'.
+    effective_verbosity = verbosity or environment.get('verbosity') or 'full'
     # Optional: list of project IDs to exclude for this configuration.
     exclude_projects = build_settings.get('exclude-projects') or build_settings.get('exclude_projects') or []
     # Optional: list of education IDs to exclude for this configuration.
@@ -115,6 +118,7 @@ def main(configuration: str, yaml_path: str, language: str, out_dir: str):
         exclude_skills=exclude_skills,
         exclude_skill_groups=exclude_skill_groups,
         root_dir=os.path.dirname(os.path.abspath(__file__)),
+        verbosity=effective_verbosity,
     )
 
     sample_mode = configuration == 'sample' and data['data']['person']['name']['en'] == 'Alex Falcon'
